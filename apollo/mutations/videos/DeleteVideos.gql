@@ -1,0 +1,3 @@
+mutation DeleteVideos($input:VideosInput){
+  DeleteVideos(input:$input)
+}

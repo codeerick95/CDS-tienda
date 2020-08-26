@@ -1,0 +1,3 @@
+mutation DeleteCategoria($input:CategoriaProductoInput!){
+  DeleteCategoria(input:$input)
+}

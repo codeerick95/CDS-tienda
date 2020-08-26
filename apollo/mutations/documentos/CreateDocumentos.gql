@@ -1,0 +1,10 @@
+mutation CreateDocumentos($input:DocumentosInput,$pdf:Upload){
+  CreateDocumentos(input:$input,pdf:$pdf) {
+    id
+    nombre
+    descripcion
+    pdf
+    created_at
+    updated_at
+  }
+}

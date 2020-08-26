@@ -1,0 +1,14 @@
+mutation UpdateEstado($input1:PedidoInput!) {
+  UpdateEstado(input1:$input1) {
+    id
+    fechaPedido
+    EstadoPedido
+    TipoPago
+    banco
+    nroOperacion
+    TipoEnvio
+    costoEnvio
+    precioTotal
+    direccionEnvio
+  }
+}

@@ -1,0 +1,17 @@
+query GetIdEfectivo($Id_efectivo:Int){
+  GetIdEfectivo(Id_efectivo:$Id_efectivo) {
+    	id
+      titulo
+      foto_principal {
+        id
+        url
+      }
+      fotoQr {
+        id
+        url
+      }
+      nroCelular
+      created_at
+      updated_at
+  }
+}

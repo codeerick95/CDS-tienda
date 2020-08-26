@@ -1,0 +1,24 @@
+query GetAllPedidos($page:Int,$number_paginate:Int) {
+  GetPedidos(page:$page,number_paginate:$number_paginate) {
+    NroItems
+    data{
+      id
+      fechaPedido
+      EstadoPedido
+      TipoPago
+      banco
+      nroOperacion
+      TipoEnvio
+      costoEnvio
+      precioTotal
+      direccionEnvio
+      voucher
+      data{
+        typeDocument
+        numberDocument
+        name
+        email
+      }
+    }
+  }
+}

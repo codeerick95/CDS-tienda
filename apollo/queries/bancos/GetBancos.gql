@@ -1,0 +1,16 @@
+query GetBancos($number_paginate:Int,$page:Int){
+  GetBancos(number_paginate:$number_paginate,page:$page) {
+    NroItems
+    data{
+      id
+      titulo
+      numero
+      imagen {
+        id
+        url
+      }
+      created_at
+      updated_at
+    }
+  }
+}

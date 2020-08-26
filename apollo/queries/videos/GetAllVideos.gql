@@ -1,0 +1,12 @@
+query GetAllVideos($number_paginate:Int,$page:Int){
+  GetAllVideos(number_paginate:$number_paginate,page:$page) {
+    NroItems
+    data {
+      id
+      titulo
+      video
+      created_at
+      updated_at
+    }
+  } 
+}

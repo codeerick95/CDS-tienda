@@ -1,0 +1,9 @@
+mutation UpdateVideos($input:VideosInput){
+  UpdateVideos(input:$input) {
+    id
+    titulo
+    video
+    created_at
+    updated_at
+  }
+}

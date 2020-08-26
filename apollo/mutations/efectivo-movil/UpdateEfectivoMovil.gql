@@ -1,0 +1,17 @@
+mutation UpdateEfectivoMovil($input:EfectetivoMovilInput){
+  UpdateEfectivoMovil(input:$input) {
+    id
+    titulo
+    foto_principal {
+      id
+      url
+    }
+    fotoQr {
+      id
+      url
+    }
+    nroCelular
+    created_at
+    updated_at
+  }
+}

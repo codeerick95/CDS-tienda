@@ -1,0 +1,22 @@
+mutation CreateTestimonios($input:TestimoniosInput){
+  CreateTestimonios(input:$input) {
+    id
+    descripcion
+    user_id
+    User {
+      id
+      typeUser
+      typeDocument
+      numberDocument
+      name
+      fatherSurname
+      motherSurname
+      photo
+      url
+      email
+      api_token
+    }
+    created_at
+    updated_at
+  } 
+}

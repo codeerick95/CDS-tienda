@@ -1,0 +1,3 @@
+mutation DeleteEfectivoMovil($input:EfectetivoMovilInput){
+  DeleteEfectivoMovil(input:$input)
+}

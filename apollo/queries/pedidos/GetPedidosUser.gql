@@ -1,0 +1,42 @@
+query GetPedidoUser{
+  GetPedidoUser {
+    id
+    fechaPedido
+    EstadoPedido
+    TipoPago
+    banco
+    nroOperacion
+    TipoEnvio
+    costoEnvio
+    precioTotal
+    voucher
+    direccionEnvio
+    user_id
+    
+    DetallePedido {
+      id
+      imagen
+      nombre
+      cantidad
+      precio
+      total
+      pedido_id
+      producto_id
+      data {
+        id
+        nombre
+        slug
+        
+        precio_real
+        precio_descuento
+        stok_minimo
+        stok_real
+        
+        keywords
+        favoritos
+        estado
+       
+      }
+    }
+  } 
+}

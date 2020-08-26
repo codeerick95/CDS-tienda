@@ -1,0 +1,3 @@
+mutation DeleteBancos($input:BancosInput!){
+  DeleteBancos(input:$input)
+}

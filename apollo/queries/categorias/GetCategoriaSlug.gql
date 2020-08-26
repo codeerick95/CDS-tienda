@@ -1,0 +1,18 @@
+query GetCategoriaSlug($slug:String){
+  GetCategoriaSlug(slug:$slug){
+     id
+    nombre
+    slug
+    imagen{
+      id
+      url
+    }
+    estado
+    open_graph{
+      id
+      url
+    }
+    descripcion
+    keywords
+  }
+}

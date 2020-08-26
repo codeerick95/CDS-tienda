@@ -1,0 +1,20 @@
+query GetAllEfectivo($number_paginate:Int,$page:Int){
+  GetAllEfectivo(number_paginate:$number_paginate,page:$page) {
+    NroItems
+    data{
+      id
+      titulo
+      foto_principal {
+        id
+        url
+      }
+      fotoQr {
+        id
+        url
+      }
+      nroCelular
+      created_at
+      updated_at
+    }
+  }
+}

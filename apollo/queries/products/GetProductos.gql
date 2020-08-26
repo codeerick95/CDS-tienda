@@ -1,0 +1,34 @@
+query GetProductos($page:Int,$number_paginate:Int,$estado:Int){
+  GetProductos(page:$page,number_paginate:$number_paginate,estado:$estado) {
+    NroItems
+    data {
+      id
+      nombre
+      slug
+      descripcionCorta
+      descripcionLarga
+      precio_real
+      precio_descuento
+      stok_minimo
+      stok_real
+      foto_real {
+        id
+        url
+      }
+      open_graph {
+        id
+        url
+      }
+      galeria {
+        id
+        url
+      }
+      keywords
+      favoritos
+      estado
+     
+      created_at
+      updated_at
+    }
+  }
+}

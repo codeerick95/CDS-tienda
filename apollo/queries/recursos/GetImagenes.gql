@@ -1,0 +1,6 @@
+query GetImagenes{
+  GetImagenes{
+    id
+    url
+  }
+}

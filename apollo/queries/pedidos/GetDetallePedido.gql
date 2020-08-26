@@ -1,0 +1,29 @@
+query GetDetallePedidos($id_pedido:Int){
+  GetDetallePedidos(id_pedido:$id_pedido) {
+    id
+    imagen
+    nombre
+    cantidad
+    precio
+    total
+    pedido_id
+    producto_id
+    data {
+      id
+      nombre
+      slug
+      descripcionCorta
+      descripcionLarga
+      precio_real
+      precio_descuento
+      stok_minimo
+      stok_real
+      
+      keywords
+      favoritos
+      estado
+      created_at
+      updated_at
+    }
+  } 
+}

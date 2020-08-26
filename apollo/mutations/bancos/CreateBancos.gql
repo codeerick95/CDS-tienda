@@ -1,0 +1,13 @@
+mutation CreateBancos($input:BancosInput){
+  CreateBancos(input:$input) {
+    id
+    titulo
+    numero
+    imagen {
+      id
+      url
+    }
+    created_at
+    updated_at
+  }
+}

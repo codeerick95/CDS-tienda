@@ -1,0 +1,13 @@
+query GetAllDocumentos($number_paginate:Int,$page:Int){
+  GetAllDocumentos(number_paginate:$number_paginate,page:$page) {
+    NroItems
+    data {
+      id
+      nombre
+      descripcion
+      pdf
+      created_at
+      updated_at
+    }
+  } 
+}

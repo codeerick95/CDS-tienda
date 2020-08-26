@@ -1,0 +1,3 @@
+mutation DeleteDocumentos($input:DocumentosInput){
+  DeleteDocumentos(input:$input)
+}

@@ -1,0 +1,20 @@
+mutation CreateProtocolos($input:ProtocolosInput){
+  CreateProtocolos(input:$input) {
+    id
+    titulo
+    slug
+    descripcion
+    video
+    keywords
+    imagen {
+      id
+      url
+    }
+    open_graph {
+      id
+      url
+    }
+    created_at
+    updated_at
+  }
+}

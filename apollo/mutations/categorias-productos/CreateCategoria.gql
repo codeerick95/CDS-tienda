@@ -1,0 +1,19 @@
+mutation CreateCategoria($input:CategoriaProductoInput!){
+  CreateCategoria(input:$input){
+    id
+    nombre
+    slug
+    imagen{
+      id
+      url
+    }
+    descripcion
+    keywords
+    open_graph{
+      id
+      url
+    }
+    estado
+
+  }
+}

@@ -1,0 +1,18 @@
+query GetCategorias($estado:Int){
+  GetCategoria(estado:$estado){
+     id
+    nombre
+    slug
+    imagen{
+      id
+      url
+    }
+    estado
+    open_graph{
+      id
+      url
+    }
+    descripcion
+    keywords
+  }
+}

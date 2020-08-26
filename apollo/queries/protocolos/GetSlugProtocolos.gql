@@ -1,0 +1,21 @@
+query GetSlugProtocolos($slug:String){
+  GetSlugProtocolos(slug:$slug) {
+    	id
+      titulo
+      slug
+      descripcion
+      video
+      keywords
+    nroComents
+      imagen {
+        id
+        url
+      }
+      open_graph {
+        id
+        url
+      }
+      created_at
+      updated_at
+  }
+}

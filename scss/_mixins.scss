@@ -1,0 +1,15 @@
+@mixin shadow {
+  -webkit-box-shadow: -8px 11px 25px -16px rgba(36,50,56,0.67);
+  -moz-box-shadow: -8px 11px 25px -16px rgba(36,50,56,0.67);
+  box-shadow: -8px 11px 25px -16px rgba(36,50,56,0.67);
+}
+
+@mixin subtitle {
+  font-size: 1.3em;
+  font-weight: 700;
+
+  padding-bottom: .3rem;
+
+  display: inline-block;
+  border-bottom: 2px solid rgba($success, .8);
+}

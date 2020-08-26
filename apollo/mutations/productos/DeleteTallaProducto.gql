@@ -1,0 +1,3 @@
+mutation DeleteTallaProducto($talla_id:Int,$producto_id:Int){
+  DeleteTallaProducto(talla_id:$talla_id,producto_id:$producto_id)
+}

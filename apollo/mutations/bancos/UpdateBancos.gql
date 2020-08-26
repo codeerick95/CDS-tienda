@@ -1,0 +1,13 @@
+mutation UpdateBancos($input:BancosInput){
+  UpdateBancos(input:$input) {
+    id
+    titulo
+    numero
+    imagen {
+      id
+      url
+    }
+    created_at
+    updated_at
+  }
+}

@@ -1,0 +1,24 @@
+query GetAllProtocolos($number_paginate:Int,$page:Int){
+  GetAllProtocolos(number_paginate:$number_paginate,page:$page) {
+    NroItems
+    data {
+      id
+      titulo
+      slug
+      descripcion
+      video
+      nroComents
+      keywords
+      imagen {
+        id
+        url
+      }
+      open_graph {
+        id
+        url
+      }
+      created_at
+      updated_at
+    }
+  }
+}

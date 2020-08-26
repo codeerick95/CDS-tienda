@@ -1,0 +1,25 @@
+query GetAllTestimonios($number_paginate:Int,$page:Int){
+  GetAllTestimonios(number_paginate:$number_paginate,page:$page) {
+    NroItems
+    data {
+      id
+      descripcion
+      user_id
+      User {
+        id
+        typeUser
+        typeDocument
+        numberDocument
+        name
+        fatherSurname
+        motherSurname
+        photo
+        url
+        email
+        api_token
+      }
+      created_at
+      updated_at
+    }
+  } 
+}

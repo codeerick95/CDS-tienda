@@ -1,0 +1,74 @@
+@import "variables";
+@import "mixins";
+
+@import '../node_modules/bootstrap/scss/bootstrap';
+@import '../node_modules/bootstrap-vue/src/index.scss';
+// @import 'bootstrap';
+// @import 'custom-styles';
+// @import 'icons';
+
+.card {
+  border: 1px solid rgba($dark, .1);
+}
+
+body {
+  background-color: $light;
+
+  font-family: 'Poppins', sans-serif !important;
+}
+
+button,
+input,
+select,
+textarea {
+  box-shadow: none !important;
+}
+
+label {
+  font-size: .95em;
+  font-weight: 500;
+
+  margin: 0;
+  margin-bottom: .3rem;
+}
+
+th {
+  font-size: .9em;
+  font-weight: normal;
+}
+
+iframe {
+  max-width: 100%;
+}
+
+.preview-image {
+  width: 200px;
+  height: 200px;
+
+  margin-top: 1rem;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.line-through {
+  text-decoration: line-through;
+}
+
+.medium-text {
+  font-size: .9em;
+}
+
+// Animaciones
+@keyframes jump_low-data {
+  0% {
+    transform: translateY(-10px) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1);
+  }
+  100% {
+    transform: translateY(-10px) scale(1);
+  }
+}

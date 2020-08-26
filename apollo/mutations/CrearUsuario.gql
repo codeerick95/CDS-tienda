@@ -1,0 +1,15 @@
+mutation CrearUsuario($input:UserInput!,$photo:Upload){
+  CrearUsuario(input:$input,photo:$photo) {
+    id
+    typeUser
+    typeDocument
+    numberDocument
+    name
+    fatherSurname
+    motherSurname
+    url
+    photo
+    email
+    api_token
+  }
+}

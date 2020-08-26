@@ -1,0 +1,6 @@
+query GetTallas{
+  GetTallas{
+    talla_id
+    nombreTalla
+  }
+}

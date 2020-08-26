@@ -1,0 +1,25 @@
+query GetAllComentsProtocolo($id_protocolo:Int){
+  GetAllComentsProtocolo(id_protocolo:$id_protocolo) {
+    id
+    textComent
+    sitioComent
+    protocolo_id
+    user_id
+    User {
+      id
+      typeUser
+      typeDocument
+      numberDocument
+      name
+      fatherSurname
+      motherSurname
+      photo
+      url
+      email
+      api_token
+    }
+    created_at
+    updated_at
+  } 
+  
+}
