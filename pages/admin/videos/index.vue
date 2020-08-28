@@ -28,7 +28,7 @@
                 <th scope="row">{{ item.id }}</th>
 
                 <td>
-                  <span>{{ item.titulo }}</span>
+                  <nuxt-link to="/videos-cientificos">{{ item.titulo }}</nuxt-link>
                 </td>
 
                 <td>

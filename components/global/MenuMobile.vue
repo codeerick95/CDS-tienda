@@ -36,6 +36,16 @@
       </section>
 
       <a href="" class="nav__link-mobile mr-3" @click.prevent="toRoute('/tienda')">Tienda</a>
+
+      <div class="social d-flex align-items-center pt-2">
+        <a :href="whatsappUrl" target="_blank" class="social-icon mr-2 text-primary">
+          <i class="fab fa-facebook"></i>
+        </a>
+
+        <a :href="facebookUrl" target="_blank" class="social-icon text-success">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </div>
     </nav>
 
   </transition>
@@ -56,6 +66,7 @@
         <span class="nav-mobile__link-text">{{ item.name}}</span>
       </div>
     </section>
+    
   </nav>
 </div>
 </template>
@@ -69,6 +80,8 @@ export default {
   data() {
     return {
       logo: appConfig.logoEstatico,
+      whatsappUrl: appConfig.redesSociales.whatsapp,
+      facebookUrl: appConfig.redesSociales.facebook,
       items: [
         {
           status: false,

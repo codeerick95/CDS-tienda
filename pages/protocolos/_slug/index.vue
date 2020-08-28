@@ -20,21 +20,50 @@
 
                     <section v-if="protocolo.imagen">
                         <!-- <img :src="protocolo.imagen.url" :alt="protocolo.titulo" class="img-fluid w-100 protocolo-slug__image"> -->
-                        <div v-html="protocolo.video">
-
+                        <div v-html="setVideo(protocolo)">
                         </div>
                     </section>
 
                     <section class="mt-3 p-3">
-                        <p class="text-muted">
-                            {{ protocolo.descripcion }}
-                        </p>
+                        <froalaView v-model="protocolo.descripcion"></froalaView>
                     </section>
                 </div>
             </article>
 
             <!-- Comentarios -->
             <section class="comments px-3">
+                <div class="row">
+                    <template v-if="comments.length >= 1">
+                        <div class="col-md-12 mb-3" v-for="item in comments" :key="item.id">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="border-bottom">
+                                        <p class="text-muted">
+                                            {{ item.textComent }}
+                                        </p>
+                                    </div>
+
+                                    <div class="pt-3 d-flex flex-column flex-md-row justify-content-between align-items-center">
+                                        <p class="my-0">
+                                            Por
+                                            <span class="text-danger">{{ `${item.User.name} ${item.User.fatherSurname}` }}</span>
+                                        </p>
+
+                                        <p class="my-0 text-muted">
+                                            <i class="far fa-calendar-alt"></i>
+                                            {{ $moment(item.created_at).format('YYYY-MM-DD') }}
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="col-md-12" v-else>
+                        <p class="lead">Sé el primero en comentar.</p>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <form @submit.prevent="createComment()">
@@ -48,39 +77,13 @@
                         </form>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 mb-3" v-for="item in comments" :key="item.id">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="border-bottom">
-                                    <p class="text-muted">
-                                        {{ item.textComent }}
-                                    </p>
-                                </div>
-
-                                <div class="pt-3 d-flex flex-column flex-md-row justify-content-between align-items-center">
-                                    <p class="my-0">
-                                        Por
-                                        <span class="text-danger">{{ `${item.User.name} ${item.User.fatherSurname}` }}</span>
-                                    </p>
-
-                                    <p class="my-0 text-muted">
-                                        <i class="far fa-calendar-alt"></i>
-                                        {{ $moment(item.created_at).format('YYYY-MM-DD') }}
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </section>
         </div>
 
         <div class="col-md-3">
             <div class="card">
-                <div class="card-body">
-                    <h3 class="lead font-weight-bold text-muted">Otros protocolos</h3>
+                <div class="card-body px-1">
+                    <h3 class="medium-text font-weight-bold ml-3">Otros protocolos</h3>
 
                     <template v-if="protocolos.length >= 1">
                         <protocolo v-for="item in protocolos" :key="item.id" :info="item"></protocolo>
@@ -195,29 +198,6 @@ export default {
         Protocolo
     },
     methods: {
-      /* getInfo() {
-        return new Promise(resolve => {
-            this.loading = true
-
-            let slug = this.slug
-
-            this.$apollo.query({
-            query: GetSlugProtocolos,
-            fetchPolicy: 'no-cache',
-            variables: {
-                slug
-            }
-            })
-          .then(res => {
-            this.protocolo = res.data.GetSlugProtocolos
-
-            this.loading = false
-
-            resolve()
-          })
-          .catch(() => this.loading = false)
-        })
-      }, */
       getComments() {
           let id_protocolo = this.protocolo.id
 
@@ -242,7 +222,6 @@ export default {
 
                 this.$apollo.query({
                 query: GetAllProtocolos,
-                fetchPolicy: 'no-cache',
                 variables: {
                     number_paginate,
                     page,
@@ -288,7 +267,36 @@ export default {
             this.loading = false
         })
         .catch(() => this.loading = false)
-      }
+      },
+        setVideo(item) {
+            if(item) {
+                let video
+
+                // Si es de Youtube
+                if(item.video.includes('youtube')) {
+                    let nuevoEnlace = item.video.replace('watch', 'embed')
+                    nuevoEnlace = nuevoEnlace.replace('?', '/')
+                    nuevoEnlace = nuevoEnlace.replace('v', '')
+                    nuevoEnlace = nuevoEnlace.replace('=', '')
+
+                    video = `
+                    <iframe width="100%" height="350px" src="${nuevoEnlace}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    `
+                } else if(item.video.includes('vimeo')) {
+
+                    // Si es de Vimeo
+                    let ultimoSlash = item.video.lastIndexOf('/', item.video.length)
+                    let id = item.video.slice(ultimoSlash + 1, item.video.length)
+
+                    video = `
+                    <iframe width="100%" height="350px" src="https://player.vimeo.com/video/${id}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                    `
+            
+                }
+
+                return video
+            }
+        }
     },
     computed: {
         currentUser: function() {

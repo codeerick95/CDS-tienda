@@ -75,12 +75,12 @@ export default {
         this.getDocumentos()
     },
     head () {
-      let title = 'Documentos científicos',
-        description = appConfig.openGraph.descripcion,
+      let title = appConfig.openGraph.documentosCientificos.titulo,
+        description = appConfig.openGraph.documentosCientificos.descripcion,
         logo = appConfig.openGraph.logo,
-        url = appConfig.openGraph.urlWeb,
+        url = `${appConfig.openGraph.urlWeb}/documentos-cientificos`,
         whatsappImg = appConfig.openGraph.logo,
-        keywords = appConfig.openGraph.keywords
+        keywords = appConfig.openGraph.documentosCientificos.keywords
 
       return {
         title,

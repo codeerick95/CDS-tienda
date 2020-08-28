@@ -6,7 +6,7 @@ query GetSlugProtocolos($slug:String){
       descripcion
       video
       keywords
-    nroComents
+      nroComents
       imagen {
         id
         url

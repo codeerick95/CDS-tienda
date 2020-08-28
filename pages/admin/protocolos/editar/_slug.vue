@@ -23,7 +23,10 @@
 
               <div class="form-group">
                 <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" v-model="descripcion" class="form-control"></textarea>
+                <!-- <textarea id="descripcion" v-model="descripcion" class="form-control"></textarea> -->
+
+                <!-- Editor -->
+                <froala :tag="'textarea'" :config="config" v-model="descripcion"></froala>
               </div>
 
               <div class="form-group">
@@ -92,7 +95,47 @@
         typeImage: '', // Se utriliza para sdaber que tipo de imagen se elegirá
         image: {},
         openGraph: {},
-        loading: false
+        loading: false,
+        config: {
+          // Configuración del editor https://froala.com/wysiwyg-editor/docs/options
+          imageUploadRemoteUrls: false,
+          language: 'es',
+          toolbarButtons: [
+            ['undo',
+              'redo',
+              'bold',
+              'fontSize',
+              'fontFamily',
+              'textColor',
+              'paragraphFormat',
+              'backgroundColor',
+              'alignLeft',
+              'alignCenter',
+              'alignRight',
+              'quote',
+              'insertImage',
+              'insertVideo',
+              'clearFormatting',
+              'insertTable',
+              'formatOLSimple',
+              'fontAwesome',
+              'fullscreen',
+            ]
+          ],
+          imageInsertButtons: ['imageByURL'],
+          videoInsertButtons: ['videoBack', '|', 'videoByURL'],
+          quickInsertEnabled: false,
+          toolbarVisibleWithoutSelection: false,
+          toolbarSticky: false,
+          imageMove: true,
+          events: {
+            'click': function (clickEvent) {
+              // Do something here.
+              // this is the editor instance.
+              console.log(this);
+            }
+          },
+        }
       }
     },
     mounted() {
@@ -128,11 +171,12 @@
       },
       setData() {
         this.titulo = this.protocolo.titulo
-        this.descripcion = this.protocolo.descripcion
         this.video = this.protocolo.video
         this.keywords = this.protocolo.keywords
         this.image = this.protocolo.imagen
         this.openGraph = this.protocolo.open_graph
+
+        setTimeout(() => this.descripcion = this.protocolo.descripcion, 1500)
       },
       update() {
         this.loading = true

@@ -63,7 +63,7 @@
               </div>
 
               <section>
-                <button type="button" class="btn btn-block btn-primary mb-2" @click="loginWithFacebook()">
+                <button type="button" class="btn btn-block btn-primary mb-2 rounded-0" @click="loginWithFacebook()">
                   <span class="font-weight-bold mr-1">
                     <i class="fab fa-facebook-f"></i>
                   </span>
@@ -77,7 +77,7 @@
                   Ingresar con Google
                 </GoogleLogin>
 
-                <button type="button" class="btn btn-block btn-success" @click="currentSlide = 1">
+                <button type="button" class="btn btn-block btn-success rounded-0" @click="currentSlide = 1">
                   <span class="font-weight-bold mr-1">
                     <i class="far fa-envelope"></i>
                   </span>

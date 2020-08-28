@@ -5,12 +5,37 @@
       <img :src="logo" alt="Logo tienda" class="logo pointer">
     </nuxt-link>
 
-    <nav class="nav d-flex align-items-center">
+    <nav class="nav d-flex align-items-center" v-if="currentUser">
       <nuxt-link to="/" class="nav__link mr-3">Protocolos</nuxt-link>
-      <nuxt-link to="/testimonios" class="nav__link mr-3" v-if="currentUser">Testimonios</nuxt-link>
-      
-      <nuxt-link to="/tienda" class="nav__link mr-3" v-if="currentUser">Tienda</nuxt-link>
+      <nuxt-link to="/testimonios" class="nav__link mr-3">Testimonios</nuxt-link>
+
+      <a to="/protocolos" class="nav__link nav__link--dropdown mr-3 position-relative">
+        Datos científicos
+        <i class="fas fa-chevron-down"></i>
+        <section class="nav__link--dropdown-content bg-white py-3 px-2">
+          <nuxt-link to="/videos-cientificos" class="nav__link mr-3 mb-2 pb-2 border-bottom">
+            <i class="fas fa-chevron-right"></i>
+            Videos Científicos
+          </nuxt-link>
+
+          <nuxt-link to="/documentos-cientificos" class="nav__link mr-3">
+            <i class="fas fa-chevron-right"></i>
+            Documentos Cientificos
+          </nuxt-link>
+        </section>
+      </a>
+      <nuxt-link to="/tienda" class="nav__link mr-3">Tienda</nuxt-link>
     </nav>
+
+    <div class="social d-flex align-items-center pt-2" v-if="currentUser">
+      <a :href="whatsappUrl" target="_blank" class="social-icon mr-2 text-primary">
+        <i class="fab fa-facebook"></i>
+      </a>
+
+      <a :href="facebookUrl" target="_blank" class="social-icon text-success">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+    </div>
   </div>
 </header>
 </template>
@@ -22,6 +47,8 @@ export default {
   data() {
     return {
       logo: appConfig.logoEstatico,
+      whatsappUrl: appConfig.redesSociales.whatsapp,
+      facebookUrl: appConfig.redesSociales.facebook,
       categories: []
     }
   },
@@ -42,7 +69,7 @@ export default {
     margin: 0 auto;
 
     display: grid;
-    grid-template-columns: 30vw 1fr;
+    grid-template-columns: 30vw 1fr 1vw;
   }
 }
 
@@ -87,5 +114,21 @@ export default {
 
 .logo {
   max-width: 15vw;
+}
+
+.social-icon {
+  font-size: 2em;
+
+  display: inline-block;
+
+  transition: transform 1s;
+
+  @media (min-width: 768px) {
+    font-size: 1.3em;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 </style>

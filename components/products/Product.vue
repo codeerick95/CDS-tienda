@@ -79,14 +79,14 @@
             id: this.product.id,
             name: this.product.nombre,
             quantity: 1,
-            price: this.menorPrecio,
+            price: this.product.precio_real,
             image: this.product.foto_real.url,
             slug: this.product.slug
           }
 
           // Si existe oferta enviamos el precio de promoción
-          if(this.menorPrecioOferta) {
-            objectToLocalStorage.price = this.menorPrecioOferta
+          if(this.product.precio_descuento) {
+            objectToLocalStorage.price = this.product.precio_descuento
           }
 
           let oldCart = []
@@ -102,7 +102,7 @@
 
           // Si ya existe solo añadimos la cantidad
           oldCart.forEach(item => {
-            if(item.id === objectToLocalStorage.id) {
+            if(item.id == objectToLocalStorage.id) {
               item.quantity += objectToLocalStorage.quantity
 
               exist = true
@@ -127,7 +127,8 @@
             duration : 3000
           })
         }
-      }
+  
+      },
     },
     computed: {
       ...mapState(['modalCarrito'])

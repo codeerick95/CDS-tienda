@@ -11,13 +11,13 @@
             </template>
         </banner>
 
-        <section class="mt-3">
+        <section class="mt-3 w-100">
           <div class="card">
             <div class="card-body">
               <h3 class="lead font-weight-bold">Mis pedidos</h3>
 
               <div class="table-responsive" v-if="orders.length >= 1">
-                <table class="table mb-0 text-center">
+                <table class="table table-striped mb-0 text-center w-100">
                   <thead>
                   <tr>
                     <th>#</th>

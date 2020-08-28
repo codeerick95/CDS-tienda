@@ -46,7 +46,10 @@
           </nuxt-link>
 
         </section>
+
       </div>
+
+      <button class="btn btn-block btn-danger rounded-0" :disabled="loading" @click="logout()">{{ loading ? 'Saliendo...' : 'Salir' }}</button>
     </nav>
   </section>
 </template>
@@ -205,7 +208,8 @@
               }
             ]
           }
-        ]
+        ],
+        loading: false
       }
     },
     methods: {
@@ -224,6 +228,24 @@
         if(item.route) {
           this.$router.push(item.route)
         }
+      },
+      logout() {
+        this.loading = true
+
+        setTimeout(() => {
+          this.$cookies.remove(appConfig.nameToken)
+
+          this.$cookies.remove('k_user_data')
+
+          this.loading = false
+
+          this.$router.push('/')
+
+          // Se recarga la página para poder obtener las cookies
+          setTimeout(() => {
+            this.$store.commit('reloadPage')
+          }, 1000)
+        }, 2000)
       }
     }
   }

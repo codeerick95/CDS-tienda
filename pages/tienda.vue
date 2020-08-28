@@ -57,12 +57,12 @@ export default {
       })
   },
   head () {
-    let title = `Tienda ${appConfig.openGraph.titulo}`,
-      description = appConfig.openGraph.descripcion,
+    let title = appConfig.openGraph.tienda.titulo,
+      description = appConfig.openGraph.tienda.descripcion,
       logo = appConfig.openGraph.logo,
-      url = appConfig.openGraph.urlWeb,
+      url = `${appConfig.openGraph.urlWeb}/tienda`,
       whatsappImg = appConfig.openGraph.logo,
-      keywords = appConfig.openGraph.keywords
+      keywords = appConfig.openGraph.tienda.keywords
 
     return {
       title,

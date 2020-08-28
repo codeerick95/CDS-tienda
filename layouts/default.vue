@@ -1,5 +1,21 @@
 <template>
   <div>
+    <section class="bg-dark d-flex justify-content-end" v-if="userLogged && userData.typeUser == 1">
+      <nuxt-link to="/admin/productos" class="btn btn-primary rounded-0">Panel de administración</nuxt-link>
+    </section>
+
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+
+    <!-- Facebook messenger -->
+    <div class="fb-customerchat"
+      attribution=setup_tool
+            page_id="105628061180244"
+      theme_color="#009245"
+      logged_in_greeting="Hola somos KiraSport ¿En que podemos ayudarte?"
+      logged_out_greeting="Hola somos KiraSport ¿En que podemos ayudarte?">
+    </div>
+
     <header-app class="d-none d-lg-block"></header-app>
 
     <div class="container-fluid front">

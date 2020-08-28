@@ -21,7 +21,7 @@
                 <p class="lead">Próximamente...</p>
             </div>
 
-            <div class="col-md-6" v-for="item in videos" :key="item.id">
+            <div class="col-md-6 mb-5" v-for="item in videos" :key="item.id">
                 <div class="card video">
                     <div class="card-body">
                         <h2 class="documentos__title lead font-weight-bold">{{ item.titulo }}</h2>
@@ -68,12 +68,12 @@ export default {
         this.getVideos()
     },
     head () {
-      let title = 'Videos científicos',
-        description = appConfig.openGraph.descripcion,
+      let title = appConfig.openGraph.videosCientificos.titulo,
+        description = appConfig.openGraph.videosCientificos.descripcion,
         logo = appConfig.openGraph.logo,
-        url = appConfig.openGraph.urlWeb,
+        url = `${appConfig.openGraph.urlWeb}/videos-cientificos`,
         whatsappImg = appConfig.openGraph.logo,
-        keywords = appConfig.openGraph.keywords
+        keywords = appConfig.openGraph.videosCientificos.keywords
 
       return {
         title,

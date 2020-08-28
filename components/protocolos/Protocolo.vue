@@ -18,7 +18,7 @@
     </section>
 
     <nuxt-link :to="{name: 'protocolos-slug', params: {slug: info.slug}}">
-        <img :src="info.imagen.url" :alt="info.titulo" class="img-fluid">
+        <img :src="info.imagen.url" :alt="info.titulo" class="protocolo__image">
     </nuxt-link>
  </div>
 </article>
@@ -37,7 +37,14 @@ export default {
         font-size: 1.5em;
     }
 
-    .img-fluid {
+    &__image {
+        max-width: 100%;
+        width: 100%;
+
+        @media (min-width: 768px) {
+            max-height: 20vw;
+        }
+
         border-radius: .3rem;
         
         transition: transform .5s;

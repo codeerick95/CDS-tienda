@@ -1,3 +1,4 @@
+
 export default {
   /*
   ** Nuxt rendering mode
@@ -8,7 +9,7 @@ export default {
   ** Nuxt target
   ** See https://nuxtjs.org/api/configuration-target
   */
-  target: 'static',
+  target: 'server',
   /*
   ** Headers of the page
   ** See https://nuxtjs.org/api/configuration-head
@@ -28,9 +29,7 @@ export default {
     ],
     script: [
       { src: '/js/facebook-sdk.js', module: true },
-      { src: 'https://kit.fontawesome.com/3bd84f9f96.js' },
-      // { src: '/vue-zoom-on-hover-master/zoomOnHover.js'}
-      // { src: 'https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.20.0/apexcharts.min.js' }
+      { src: 'https://kit.fontawesome.com/3bd84f9f96.js' }
     ]
   },
   /*
@@ -44,7 +43,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    { src: './plugins/swiperCarousel.js', mode: 'client' }
+    { src: './plugins/swiperCarousel.js', mode: 'client' },
+    { src: './plugins/froala.js', mode: 'client' }
   ],
   /*
   ** Auto import components
@@ -94,7 +94,5 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
-  },
-  extend(config, ctx) {},
-  babel: { compact: true }
+  }
 }

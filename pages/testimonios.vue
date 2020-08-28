@@ -93,12 +93,12 @@ export default {
         this.getTestimonios()
     },
     head () {
-      let title = 'Testimonios',
-        description = appConfig.openGraph.descripcion,
+      let title = appConfig.openGraph.testimonios.titulo,
+        description = appConfig.openGraph.testimonios.descripcion,
         logo = appConfig.openGraph.logo,
-        url = appConfig.openGraph.urlWeb,
+        url = `${appConfig.openGraph.urlWeb}/testimonios`,
         whatsappImg = appConfig.openGraph.logo,
-        keywords = appConfig.openGraph.keywords
+        keywords = appConfig.openGraph.testimonios.keywords
 
       return {
         title,

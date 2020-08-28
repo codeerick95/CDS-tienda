@@ -5,7 +5,7 @@
     </aside>
 
     <main class="admin__main" :class="!asideStatus ? 'admin__main--active' : ''">
-      <header-admin>
+      <admin-header>
         <template slot="button">
           <div class="toggle-menu pointer" @click="asideStatus = !asideStatus">
             <span class="icon">
@@ -13,7 +13,7 @@
             </span>
           </div>
         </template>
-      </header-admin>
+      </admin-header>
 
       <section class="container mt-5">
         <div class="row">

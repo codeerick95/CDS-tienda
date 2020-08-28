@@ -23,11 +23,14 @@
 
               <div class="form-group">
                 <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" v-model="descripcion" class="form-control"></textarea>
+                <!-- <textarea id="descripcion" v-model="descripcion" class="form-control"></textarea> -->
+
+                <!-- Editor -->
+                <froala :tag="'textarea'" :config="config" v-model="descripcion"></froala>
               </div>
 
               <div class="form-group">
-                <label for="video">Iframe de video</label>
+                <label for="video">URL de video</label>
                 <textarea id="video" v-model="video" class="form-control"></textarea>
               </div>
 
@@ -48,14 +51,12 @@
                 </div>
               </section>
 
-              <section class="py-3 px-2">
-                <div class="card">
-                  <div class="card-body">
-                    <span class="d-block mb-2 font-weight-bold">Imagen para redes sociales</span>
-                    <button type="button" class="btn btn-sm btn-warning" @click="showModalImages('openGraph')">Seleccionar imagen</button>
+              <section class="card py-3 px-2 mt-3">
+                <div class="card-body">
+                  <span class="d-block mb-2 font-weight-bold">Imagen para redes sociales</span>
+                  <button type="button" class="btn btn-sm btn-warning" @click="showModalImages('openGraph')">Seleccionar imagen</button>
 
-                    <img :src="openGraph.url" alt="Imagen previa" class="img-fluid preview-image" v-if="openGraph.id">
-                  </div>
+                  <img :src="openGraph.url" alt="Imagen previa" class="img-fluid preview-image" v-if="openGraph.id">
                 </div>
               </section>
             </div>
@@ -85,33 +86,74 @@
         typeImage: '', // Se utriliza para sdaber que tipo de imagen se elegirá
         image: {},
         openGraph: {},
-        loading: false
+        loading: false,
+        config: {
+          // Configuración del editor https://froala.com/wysiwyg-editor/docs/options
+          imageUploadRemoteUrls: false,
+          language: 'es',
+          toolbarButtons: [
+            ['undo',
+              'redo',
+              'bold',
+              'fontSize',
+              'fontFamily',
+              'textColor',
+              'paragraphFormat',
+              'backgroundColor',
+              'alignLeft',
+              'alignCenter',
+              'alignRight',
+              'quote',
+              'insertImage',
+              'insertVideo',
+              'clearFormatting',
+              'insertTable',
+              'formatOLSimple',
+              'fontAwesome',
+              'fullscreen',
+            ]
+          ],
+          imageInsertButtons: ['imageByURL'],
+          videoInsertButtons: ['videoBack', '|', 'videoByURL'],
+          quickInsertEnabled: false,
+          toolbarVisibleWithoutSelection: false,
+          toolbarSticky: false,
+          imageMove: true,
+          events: {
+            'click': function (clickEvent) {
+              // Do something here.
+              // this is the editor instance.
+              console.log(this);
+            }
+          },
+        }
       }
+    },
+    mounted() {
+      setTimeout(() => {
+        // Funcionalidad para elegir imagen del backend
+
+        // Escuchar evento click en botón de imagen del editor para mostrar modal con imágenes del proyecto
+        const button = document.querySelector('[data-cmd="insertImage"]')
+
+        button.addEventListener('click', e => {
+          e.preventDefault()
+
+          // Abre modal de imágenes
+          this.showModalImages('editor')
+        })
+      }, 1000)
     },
     components: {
       GalleryModal
     },
     methods: {
-      showModalImages(type, colorIndex) {
+      showModalImages(type) {
         this.typeImage = type
-
-        // Si es de tipo galería se permitirá elegir varias imágenes
-        if(type === 'gallery') {
-          this.multiple = true
-        }
-
-        // Aquí se añade el índice del color a añadir imágenes
-        if(type === 'galleryForColors') {
-          this.colorIndexSelected = colorIndex
-
-          this.multiple = true
-        }
 
         this.$bvModal.show('modal-images')
       },
       closeModalImages() {
-        this.multiple = false
-
         this.$bvModal.hide('modal-images')
       },
       setImage(data) {
@@ -120,23 +162,17 @@
           this.image = data
         } else if(this.typeImage === 'openGraph') {
           this.openGraph = data
-        } else if(this.typeImage === 'gallery') {
-          // Se añaden las imágenes seleccionadas a la galería principal
-          data.forEach(i => {
-            this.mainGallery.push(i)
-          })
-        } else if(this.typeImage === 'galleryForColors') {
-          // Si las imágenes seleccionadas fueron para la galería de colores
-          data.forEach(i => {
-            this.colorsForMutation[this.colorIndexSelected].galeria.push(i)
-            // this.colorsForMutation[this.colorIndexSelected].galeriaForColor.push(i)
-          })
+        } else if(this.typeImage === 'editor') {
+          this.selectImageForEditor(data)
         }
-
-        this.multiple = false
 
         // Limpia campos de seleccionar colores
         // this.colorIndexSelected = null
+
+        this.closeModalImages()
+      },
+      selectImageForEditor(image) {
+        this.descripcion += `<img src="${image.url}" style="width: 300px;" class="fr-fic fr-dib">`
 
         this.closeModalImages()
       },
