@@ -26,7 +26,7 @@
                     <div class="card-body">
                         <h2 class="documentos__title lead font-weight-bold">{{ item.titulo }}</h2>
 
-                        <div v-html="item.video">
+                        <div v-html="setVideo(item)">
                         </div>
 
                         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center border-top pt-3">
@@ -132,6 +132,35 @@ export default {
                 this.loading = false
             })
             .catch(() => this.loading = false)
+        },
+        setVideo(item) {
+            if(item) {
+                let video
+
+                // Si es de Youtube
+                if(item.video.includes('youtube')) {
+                    let nuevoEnlace = item.video.replace('watch', 'embed')
+                    nuevoEnlace = nuevoEnlace.replace('?', '/')
+                    nuevoEnlace = nuevoEnlace.replace('v', '')
+                    nuevoEnlace = nuevoEnlace.replace('=', '')
+
+                    video = `
+                    <iframe width="100%" height="350px" src="${nuevoEnlace}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    `
+                } else if(item.video.includes('vimeo')) {
+
+                    // Si es de Vimeo
+                    let ultimoSlash = item.video.lastIndexOf('/', item.video.length)
+                    let id = item.video.slice(ultimoSlash + 1, item.video.length)
+
+                    video = `
+                    <iframe width="100%" height="350px" src="https://player.vimeo.com/video/${id}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+                    `
+            
+                }
+
+                return video
+            }
         }
     }
 }

@@ -22,7 +22,7 @@
               </div>
 
               <div class="form-group">
-                <label for="url">Iframe de video</label>
+                <label for="url">URL de video</label>
                 <textarea id="url" v-model="url" class="form-control"></textarea>
               </div>
             </div>
