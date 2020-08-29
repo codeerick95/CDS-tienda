@@ -9,6 +9,7 @@ export default {
   ** Nuxt target
   ** See https://nuxtjs.org/api/configuration-target
   */
+  server: {port: 3000, host: 'localhost'},
   target: 'server',
   /*
   ** Headers of the page
