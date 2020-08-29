@@ -59,7 +59,7 @@ export default {
         description = appConfig.openGraph.descripcion,
         logo = appConfig.openGraph.logo,
         url = appConfig.openGraph.urlWeb,
-        whatsappImg = appConfig.openGraph.logo,
+        whatsappImg = appConfig.openGraph.whatsapp,
         keywords = appConfig.openGraph.keywords
 
       return {
