@@ -3,7 +3,7 @@ export const appConfig = {
     logoEstatico: '/logo-mms-peru.png',
     nameToken: 'ktoken',
     graphUrl: 'https://logica.cdstienda.com/public/graphql',
-    facebookAppId: '729329960948099',
+    facebookAppId: '729329960948099',	
     googleClientId: '27183221542-cd37omof21mjjhrhl2dt6nigkdj8j7q7.apps.googleusercontent.com',
     redesSociales: {
       facebook: 'https://www.facebook.com/BioySaludMedicinaAlternativa',
