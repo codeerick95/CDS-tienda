@@ -29,7 +29,7 @@
 
       <menu-mobile class="d-lg-none"></menu-mobile>
 
-      <div class="cart-btn d-none d-lg-block bg-light shadow" :class="$route.name != 'productos-slug' ? 'cart-btn--medium' : 'cart-btn--top'">
+      <div class="cart-btn d-none d-lg-block bg-light shadow" :class="$route.name != 'productos-slug' ? 'cart-btn--medium' : 'cart-btn--top'" v-if="$route.name != 'mi-cuenta' && $route.name != 'pedidos-id'">
         <div class="d-flex alig-items-center py-3 px-4" @click="mostrarCarrito()">
           <span class="icon d-flex justify-content-center align-items-center pr-3">
             <i class="fas fa-shopping-cart"></i>

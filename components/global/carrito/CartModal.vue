@@ -1,7 +1,7 @@
 <template>
   <section class="modal-cart d-flex justify-content-center align-items-center">
     <div class="modal-cart__content bg-white p-1 p-lg-4">
-      <div class="modal-cart__header">
+      <div class="modal-cart__header p-3 p-md-0">
         <div class="d-flex justify-content-between align-items-center w-100">
           <h3 class="modal-cart__title font-weight-bold my-0">Carrito</h3>
 

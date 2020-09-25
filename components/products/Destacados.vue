@@ -7,14 +7,14 @@
     </div>
 
     <div class="row" v-if="products.length >= 1">
-      <div class="col-3" v-for="product in products" :key="product.id">
-        <product :product="product"></product>
+      <div class="col-6 col-md-3" v-for="product in products" :key="product.id">
+        <product :product="product" @agregadoAlCarrito="agregadoAlCarrito()"></product>
       </div>
     </div>
 
     <div class="row mt-5">
       <div class="col-md-12 text-center">
-        <nuxt-link to="/" class="btn btn-primary">Ver todos</nuxt-link>
+        <a href="" class="btn btn-danger rounded-0" @click.prevent="to()">Ver todos</a>
       </div>
     </div>
   </div>
@@ -59,6 +59,14 @@
           .then(res => {
             this.products = res.data.GetProductosFavoritos.data
           })
+      },
+      to() {
+        this.$store.commit('setModalCarrito', false)
+
+        this.$router.push('/tienda')
+      },
+      agregadoAlCarrito() {
+        this.$emit('agregadoAlCarrito')
       }
     }
   }

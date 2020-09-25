@@ -432,7 +432,8 @@
 
 <style lang="scss">
   .admin-products {
-
+    padding-bottom: 5rem;
+    
     &__image {
       width: 50px;
       height: 50px;

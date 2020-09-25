@@ -115,7 +115,7 @@
                     </span>
                   </div>
 
-                  <div class="col-md-8 d-flex flex-column justify-content-center">
+                  <div class="col-8 d-flex flex-column justify-content-center">
                     <span class="text-success">Disponible</span>
                     <span class="medium-text">Entrega express</span>
                   </div>
@@ -128,7 +128,7 @@
                     </span>
                   </div>
 
-                  <div class="col-md-8 d-flex flex-column justify-content-center">
+                  <div class="col-8 d-flex flex-column justify-content-center">
                     <span class="text-success">Disponible</span>
                     <span class="medium-text">Encomienda</span>
                   </div>
@@ -397,12 +397,17 @@
 
 <style lang="scss">
 .product-slug {
+  padding-bottom: 6rem;
 
   &__gallery-main-image {
     width: 100%;
-    height: 20vw;
+    height: 40vh;
 
     border-radius: .3rem;
+
+    @media (min-width: 768px) {
+      height: 20vw;
+    }
   }
 
   &__gallery {

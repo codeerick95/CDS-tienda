@@ -3,7 +3,7 @@
   <section class="nav-mobile__menu h-100 d-flex justify-content-center align-items-center">
     <div
       class="nav-mobile__link-container d-flex flex-column text-center"
-      :class="item.tag == activeItem ? 'text-danger' : 'text-white'"
+      :class="item.tag === $route.name ? 'text-danger' : 'text-white'"
       v-for="(item, index) in items"
       :key="index"
       @click="to(item)"
@@ -11,7 +11,7 @@
       <span class="icon">
         <i :class="item.icon"></i>
       </span>
-      <span class="nav-mobile__link-text">{{ item.name}}</span>
+      <span class="nav-mobile__link-text">{{ item.name }}</span>
     </div>
 
     <div
@@ -41,14 +41,15 @@ export default {
           status: false,
           name: 'Inicio',
           icon: 'fas fa-home',
-          tag: 'inicio',
+          tag: 'index',
           route: '/'
         },
         {
           status: false,
-          name: 'Categorías',
+          name: 'Tienda',
           icon: 'fas fa-tags',
-          tag: 'categorias'
+          tag: 'tienda',
+          route: '/tienda'
         },
         {
           status: false,
@@ -60,7 +61,7 @@ export default {
           status: false,
           name: 'Cuenta',
           icon: 'fas fa-user-circle',
-          tag: 'cuenta',
+          tag: 'mi-cuenta',
           route: '/mi-cuenta'
         }
       ],
@@ -70,32 +71,25 @@ export default {
   },
   methods: {
     to(item) {
-      if(item.tag == 'categorias') {
-        this.$store.commit('setShowCategoriesMobile', true)
-      } else {
-        // Cierra modal de categorías
-        this.$store.commit('setShowCategoriesMobile', false)
+      if(item.tag == 'carrito') {
+        this.$store.commit('setModalCarrito', true)
+      }
 
-        if(item.tag == 'carrito') {
-          this.$store.commit('setModalCarrito', true)
-        }
+      if(item.tag == 'index' || item.tag === 'tienda') {
+        this.$router.push(item.route)
+      }
 
-        if(item.tag == 'inicio') {
-          this.$router.push(item.route)
-        }
+      if(item.tag == 'mi-cuenta') {
 
-        if(item.tag == 'cuenta') {
-
-          if(this.currentUser) {
-            // Redirigir a cuenta
-            if(this.userData.typeUser == 1) {
-              this.$router.push('/admin/productos')
-            } else {
-              this.$router.push('/mi-cuenta')
-            }
+        if(this.currentUser) {
+          // Redirigir a cuenta
+          if(this.userData.typeUser == 1) {
+            this.$router.push('/admin/productos')
           } else {
-            this.$bvModal.show('modal-auth')
+            this.$router.push('/mi-cuenta')
           }
+        } else {
+          this.$bvModal.show('modal-auth')
         }
       }
 

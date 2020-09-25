@@ -251,7 +251,7 @@
       validateFirstSlide: function() {
         let status = false
 
-        if(this.name && this.descripcionCorta && this.descripcionLarga && this.image.id && this.openGraph.id && this.keywords && this.mainGallery.length >= 1) {
+        if(this.name && this.image.id && this.category) {
           status = true
         }
 
