@@ -1,6 +1,6 @@
 <template>
   <section class="modal-cart d-flex justify-content-center align-items-center">
-    <div class="modal-cart__content bg-white p-4">
+    <div class="modal-cart__content bg-white p-1 p-lg-4">
       <div class="modal-cart__header">
         <div class="d-flex justify-content-between align-items-center w-100">
           <h3 class="modal-cart__title font-weight-bold my-0">Carrito</h3>
@@ -12,7 +12,7 @@
         </div>
       </div>
 
-      <div class="container cart__container animated fadeIn mt-4" v-if="products.length >= 1 && currentSlide != 5">
+      <div class="container cart__container animated fadeIn mt-4" v-if="products.length >= 1 && currentSlide != 6">
         <div class="row">
           <div class="col-lg-9 px-0 px-lg-2">
             <div class="card cart__main-content position-relative">
@@ -26,13 +26,15 @@
                   name="custom-classes-transition"
                   enter-active-class="animated fadeInDown"
                 >
-                  <products-list key="1" @carritoVacio="products = []" @removeProduct="getProductsByLocalStorage()" @next="currentSlide++" v-show="currentSlide == 1"></products-list>
+                  <products-list key="1" @carritoVacio="products = []" @removeProduct="getProductsByLocalStorage()" @next="currentSlide++" @cambioEnCantidad="getProductsByLocalStorage()" v-show="currentSlide == 1"></products-list>
 
                   <select-shipping key="2" @prev="currentSlide--" @next="selectTypeShipping($event)" v-show="currentSlide == 2"></select-shipping>
 
                   <address-cart key="3" @prev="currentSlide--" @addAdress="addAdress()" :typeShipping="typeShipping" v-show="currentSlide == 3"></address-cart>
 
-                  <payment-type key="4" @prev="currentSlide--" @proccessOrder="proccessOrder()" v-show="currentSlide == 4"></payment-type>
+                  <payment-type key="4" @prev="currentSlide--" @confirmTypePayment="confirmTypePayment()" v-show="currentSlide == 4"></payment-type>
+
+                  <upload-file key="5" @prev="currentSlide--" @proccessOrder="proccessOrder()" v-show="currentSlide == 5"></upload-file>
                 </transition-group>
 
               </div>
@@ -74,7 +76,7 @@
                     <button
                       type="submit"
                       class="btn btn-lg btn-block btn-primary"
-                      :disabled="!validarProcesarCompra || loading"
+                      :disabled="!habilitarBotonFinalizarCompra || loading"
                       @click.prevent="proccessOrder()"
                     >{{ loading ? 'Procesando...' : 'PROCESAR COMPRA' }}</button>
                   </div>
@@ -91,18 +93,20 @@
       </div>
 
       <!-- Si el carrito está vacío -->
-      <section class="text-center mt-5 mt-lg-3" v-if="products.length <= 0 && currentSlide != 5">
+      <section class="text-center mt-3" v-if="products.length <= 0 && currentSlide != 6">
         <span class="modal-cart__icon">
           <i class="fas fa-shopping-cart"></i>
         </span>
         <p class="lead text-danger">Su carrito está vacío.</p>
 
-        <button type="button" class="btn btn-primary" @click="closeModal()">Visitar tienda</button>
+
+        <!-- Productos destacados -->
+        <destacados class="mt-5" @agregadoAlCarrito="getProductsByLocalStorage()"></destacados>
 
       </section>
 
       <!-- Orden creada -->
-      <order-created v-if="currentSlide == 5"></order-created>
+      <order-created v-if="currentSlide == 6"></order-created>
 
     </div>
   </section>
@@ -121,7 +125,9 @@
   import SelectShipping from '@/components/global/carrito/SelectShipping'
   import AddressCart from '@/components/global/carrito/Address'
   import PaymentType from '@/components/global/carrito/PaymentType'
+  import UploadFile from '@/components/global/carrito/UploadFile'
   import OrderCreated from '@/components/global/carrito/OrderCreated'
+  import Destacados from "@/components/products/Destacados";
 
   export default {
     data() {
@@ -145,7 +151,9 @@
       SelectShipping,
       AddressCart,
       PaymentType,
-      OrderCreated
+      UploadFile,
+      OrderCreated,
+      Destacados
     },
     methods: {
       getProductsByLocalStorage() {
@@ -195,7 +203,8 @@
         let input1 = this.dataForCreateOrder.input1,
           input2 = this.dataForCreateOrder.input2,
           input3 = this.dataForCreateOrder.input3,
-          input4 = this.dataForCreateOrder.input4
+          input4 = this.dataForCreateOrder.input4,
+          voucher = this.voucher || null
 
         this.$apollo.mutate({
           mutation: CreatePedido,
@@ -203,7 +212,8 @@
             input1,
             input2,
             input3,
-            input4
+            input4,
+            voucher
           }
         })
         .then(response => {
@@ -216,18 +226,16 @@
 
           this.loading = false
 
-          this.currentSlide = 5
+          this.currentSlide = 6
         })
         .catch(error => this.loading = false)
       },
-      closeModal() {
-        this.$store.commit('setModalCarrito', false)
-
-        this.$router.push('/tienda')
+      confirmTypePayment() {
+        this.currentSlide = 5
       }
     },
     computed: {
-      ...mapState(['dataForCreateOrder']),
+      ...mapState(['dataForCreateOrder', 'habilitarBotonFinalizarCompra', 'voucher']),
       setTitle: function () {
         let title
 
@@ -239,6 +247,8 @@
           title = 'Asignar direcciones'
         } else if(this.currentSlide == 4) {
           title = 'Método de pago'
+        } else if(this.currentSlide == 5) {
+          title = 'Subir comprobante de pago'
         }
 
         return title
@@ -276,20 +286,8 @@
 
         return price
       },
-      validarProcesarCompra: function() {
-        let status
-
-        // Si está en el último paso y eligió unh banco
-        if(this.dataForCreateOrder.input1) {
-          if(this.dataForCreateOrder.input1.banco) {
-            status = true
-          }
-        }
-
-        return status
-      },
       token: function() {
-        return this.$cookies.get(appConfig.nameToken)
+        return !!this.$apolloHelpers.getToken()
       }
     }
   }
@@ -315,9 +313,13 @@
     }
 
     &__content {
-      width: 80%;
-      height: 80%;
+      width: 90%;
+      height: 95%;
       overflow-y: scroll;
+
+      @media (min-width: 768px) {
+        width: 80%;
+      }
     }
 
     &__icon {

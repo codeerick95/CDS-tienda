@@ -161,8 +161,8 @@ export default {
   },
   computed: {
     user: function() {
-      if(this.$cookies.get('k_user_data')) {
-        let user = this.$cookies.get('k_user_data')
+      if(this.$cookies.get(appConfig.userData)) {
+        let user = this.$cookies.get(appConfig.userData)
 
         return user
       }

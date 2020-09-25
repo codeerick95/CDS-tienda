@@ -20,8 +20,8 @@
 
       <div class="col-md-4">
         <div class="form-group">
-          <label for="fecha_nacimento" class="text-muted">Fecha de nacimiento</label>
-          <input type="date" id="fecha_nacimento" class="form-control" v-model="fecha_nacimento">
+          <label for="fecha_nacimiento" class="text-muted">Fecha de nacimiento</label>
+          <input type="date" id="fecha_nacimiento" class="form-control" v-model="fecha_nacimiento">
         </div>
       </div>
 
@@ -95,7 +95,7 @@
         motherSurname: '',
         email: '',
         password: '',
-        fecha_nacimento: '',
+        fecha_nacimiento: '',
         itemsDocument: [
           {
             value: 1,
@@ -126,7 +126,7 @@
           motherSurname: this.motherSurname,
           email: this.email,
           password: this.password,
-          // fecha_nacimento: this.fecha_nacimento
+          fecha_nacimiento: this.fecha_nacimiento
         }
 
         this.$apollo.mutate({
@@ -157,48 +157,57 @@
         })
 
       },
-      login() {
-        this.loading = true
+      async login () {
+        if(this.validate) {
+            this.error = false
+            this.loading = true
 
-        this.error = false
+            try {
+                const input = {
+                    email: this.email,
+                    password: this.password
+                }
 
-        let input = {
-          email: this.email,
-          password: this.password
-        }
+                const res = await this.$apollo.mutate({
+                    mutation: login,
+                    variables: {
+                        input
+                    }
+                }).then(res => {
+                    // Se verifica que no haya error en el token
+                    if(res.data.login.api_token != "ERROR") {
+                        this.$apolloHelpers.onLogin(res.data.login.api_token)
+                        .then(() => {
+                            this.loading = false
 
-        // Call to the graphql mutation
-        this.$apollo.mutate({
-          mutation: login,
-          variables: {
-            input
-          },
-        })
-        .then((response) => {
-            // Si es null se muestra el error
-            if(response.data.login.id === "ERROR" && response.data.login.token === "ERROR") {
-              this.error = {
-                status: true,
-                message: 'Correo o contraseña incorrectos'
-              }
-            } else {
+                            const userData = JSON.stringify(res.data.login)
 
-              let token = response.data.login.api_token,
-                userData = JSON.stringify(response.data.login)
+                            // Guarda datos en cookies
+                            this.$cookies.set(appConfig.userData, userData, {
+                              maxAge: 60 * 60 * 24 * 7
+                            })
 
-              // Guarda datos en cookies
-              this.$cookies.set(appConfig.nameToken, token)
-              this.$cookies.set('k_user_data', userData)
+                            // Redirigir según tipo de usuario
+                            if(res.data.login.typeUser === 1) {
+                              this.$router.push('/admin/productos')
+                            } else {
+                              this.$router.push('/mi-cuenta')
+                            }
 
-              this.$router.push('/mi-cuenta')
-
-              // Se recarga la página para poder obtener las cookies
-              setTimeout(() => {
-                this.$store.commit('reloadPage')
-              }, 1000)
+                            // Cierra modal de login
+                            this.$bvModal.hide('modal-auth')
+                        })
+                    } else {
+                        this.error = true
+                        this.loading = false
+                    }
+                })
+            
+            } catch (e) {
+                this.error = true
+                this.loading = false
             }
-          })
-        .catch(() => this.loading = false)
+        }
       },
       resetFields() {
         this.typeDocument = ''
@@ -214,7 +223,7 @@
       validate: function() {
         let status = false
 
-        if(this.name && this.fatherSurname && this.motherSurname && this.typeDocument && this.email && this.password && this.fecha_nacimento) {
+        if(this.name && this.fatherSurname && this.motherSurname && this.typeDocument && this.email && this.password && this.fecha_nacimiento) {
           status = true
         }
 

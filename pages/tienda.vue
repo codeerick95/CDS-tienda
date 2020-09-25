@@ -32,7 +32,7 @@
   import { appConfig } from '@/env'
 
 // Queries
-import GetProductos from '@/apollo/queries/products/GetProductos'
+import GetProductosFavoritos from '@/apollo/queries/products/GetProductosFavoritos'
 
 // Components
 import Product from "@/components/products/Product";
@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       products: [],
-      number_paginate: 50,
+      number_paginate: 12,
       page: 1,
       nroTotalItems: 0,
       loading: false,
@@ -106,24 +106,48 @@ export default {
 
         let number_paginate = this.number_paginate,
           page = this.page,
-          estado = "1"
+          favorito = 1
 
         this.$apollo.query({
-          query: GetProductos,
+          query: GetProductosFavoritos,
           variables: {
             number_paginate,
             page,
-            estado
+            favorito
           }
         })
           .then(res => {
-            this.nroTotalItems = res.data.GetProductos.NroItems
+            this.nroTotalItems = res.data.GetProductosFavoritos.NroItems
 
             this.loading = false
 
-            resolve(res.data.GetProductos.data)
+            resolve(res.data.GetProductosFavoritos.data)
           })
       })
+    },
+    infiniteScroll() {
+      window.onscroll = () => {
+        // True || False
+        let bottomOfWindow =
+          document.documentElement.scrollTop + window.innerHeight ===
+          document.documentElement.offsetHeight;
+
+        if (bottomOfWindow) {
+          // Preguntamos si la página actual es menor al total de páginas la Api
+          if (this.page < (this.nroTotalItems / this.number_paginate)) {
+            // Si es así, aumentamos la página actual en 1
+            // importante asignarle el signo < ya que si es igual o mayor, entonces
+            // se le sumará 1 y la api devolverá un error
+            this.page = this.page + 1;
+
+            // Y hacemos el pedido de los nuevos datos
+            this.getProducts()
+              .then(products => {
+                products.forEach(item => this.products.push(item))
+              })
+          }
+        }
+      }
     }
   }
 }

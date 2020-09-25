@@ -114,50 +114,58 @@ export default {
       this.$store.commit('setModalCarrito', true)
     },
     toAccount() {
-      // Si no está logueado
-      if(!this.userLogged) {
+        // Si no está logueado
+        if(!this.userLogged) {
 
-        this.$bvModal.show('modal-auth')
+            this.$bvModal.show('modal-auth')
 
-      } else {
-
-        // Redirigir según el tipo de usuario
-        if(this.userData.typeUser == 1) {
-          this.$router.push('/admin/productos')
-        } else if(this.userData.typeUser == 2){
-          this.$router.push('/mi-cuenta')
         } else {
-          this.$router.push('/')
-        }
 
-      }
+            if(!this.userData && this.userLogged) {
+                this.logout()
+            } else {
+                // Redirigir según el tipo de usuario
+                if(this.userData.typeUser == 1) {
+                    this.$router.push('/admin/productos')
+                } else if(this.userData.typeUser == 2){
+                    this.$router.push('/mi-cuenta')
+                } else {
+                    this.$router.push('/')
+                }
+            } 
+
+        }
     },
     logout() {
-      this.loading = true
+        this.loading = true
 
-      setTimeout(() => {
-        this.$cookies.remove(appConfig.nameToken)
-
-        this.$cookies.remove('k_user_data')
-
-        this.loading = false
-
-        this.$router.push('/')
-
-        // Se recarga la página para poder obtener las cookies
         setTimeout(() => {
-          this.$store.commit('reloadPage')
+            this.$apolloHelpers.onLogout()
+            .then(() => {
+                this.$cookies.remove(appConfig.userData)
+
+                if(this.$route.path === '/') {
+                    this.$store.commit('reloadPage')
+                } else {
+                    this.$router.push('/')
+                }
+
+                this.loading = false
+            })
         }, 1000)
-      }, 2000)
     }
   },
   computed: {
     ...mapState(['modalCarrito', 'nroItemsCarrito', 'showCategoriesMobile']),
     userLogged: function () {
-      return this.$cookies.get(appConfig.nameToken) ? true : false
+      return !!this.$apolloHelpers.getToken()
     },
     userData: function () {
-      return this.$cookies.get('k_user_data')
+      if(this.$cookies.get(appConfig.userData)) {
+        let user = this.$cookies.get(appConfig.userData)
+
+        return user
+      }
     }
   }
 }

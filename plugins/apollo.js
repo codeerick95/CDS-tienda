@@ -1,11 +1,8 @@
 import { appConfig } from '../env'
 
-export default function({context, app}){
-  let token = app.$cookies.get(appConfig.nameToken)
-
+export default function(){
   return {
     httpEndpoint: appConfig.graphUrl,
-    getAuth:() => `Bearer ${token}`,
     inMemoryCacheOptions: {
       addTypename: false
     }

@@ -1,87 +1,41 @@
 <template>
-<div>
-  <!-- Menu con opciones generales -->
-  <transition
-        name="custom-classes-transition"
-        enter-active-class="animated zoomInDown"
-        leave-active-class="animated fadeOut"
-      >
-    
-    <nav class="menu-mobile bg-dark d-flex flex-column justify-content-center align-items-center" v-if="navMobile">
-
-      <span class="close-icon text-white" @click="navMobile = false">
-        <i class="fas fa-times-circle"></i>
+<nav class="nav-mobile bg-dark bg-info">
+  <section class="nav-mobile__menu h-100 d-flex justify-content-center align-items-center">
+    <div
+      class="nav-mobile__link-container d-flex flex-column text-center"
+      :class="item.tag == activeItem ? 'text-danger' : 'text-white'"
+      v-for="(item, index) in items"
+      :key="index"
+      @click="to(item)"
+    >
+      <span class="icon">
+        <i :class="item.icon"></i>
       </span>
+      <span class="nav-mobile__link-text">{{ item.name}}</span>
+    </div>
 
-      <img :src="logo" alt="Logo" class="menu-mobile__logo mb-3">
-
-      <a href="" class="nav__link-mobile mr-3" @click.prevent="toRoute('/')">Protocolos</a>
-      <a href="" class="nav__link-mobile mr-3" @click.prevent="toRoute('/testimonios')">Testimonios</a>
-
-      <a href="" class="nav__link-mobile mr-3 position-relative" @click.prevent="showSubmenu = !showSubmenu">
-        Datos científicos
-        <i class="fas fa-chevron-down"></i>
-      </a>
-
-      <section class="py-3 px-2 d-flex flex-column animated fadeIn" v-if="showSubmenu">
-        <a href="" class="nav__link-mobile-submenu mr-3" @click.prevent="toRoute('/videos-cientificos')">
-          <i class="fas fa-chevron-right"></i>
-          Videos Científicos
-        </a>
-
-        <a href="" class="nav__link-mobile-submenu mr-3" @click.prevent="toRoute('/documentos-cientificos')">
-          <i class="fas fa-chevron-right"></i>
-          Documentos Cientificos
-        </a>
-      </section>
-
-      <a href="" class="nav__link-mobile mr-3" @click.prevent="toRoute('/tienda')">Tienda</a>
-
-      <div class="social d-flex align-items-center pt-2">
-        <a :href="whatsappUrl" target="_blank" class="social-icon mr-2 text-primary">
-          <i class="fab fa-facebook"></i>
-        </a>
-
-        <a :href="facebookUrl" target="_blank" class="social-icon text-success">
-          <i class="fab fa-whatsapp"></i>
-        </a>
-      </div>
-    </nav>
-
-  </transition>
-
-  <!-- Menu inferior -->
-  <nav class="nav-mobile bg-dark bg-info">
-    <section class="nav-mobile__menu h-100 d-flex justify-content-center align-items-center">
-      <div
-        class="nav-mobile__link-container d-flex flex-column text-center"
-        :class="item.tag == activeItem ? 'text-danger' : 'text-white'"
-        v-for="(item, index) in items"
-        :key="index"
-        @click="to(item)"
-      >
-        <span class="icon">
-          <i :class="item.icon"></i>
-        </span>
-        <span class="nav-mobile__link-text">{{ item.name}}</span>
-      </div>
-    </section>
-    
-  </nav>
-</div>
+    <div
+      class="nav-mobile__link-container d-flex flex-column text-center text-white"
+      @click="logout()"
+      v-if="currentUser"
+    >
+      <span class="icon">
+        <i class="fas fa-sign-out-alt"></i>
+      </span>
+      <span class="nav-mobile__link-text">Salir</span>
+    </div>
+  </section>
+</nav>
 </template>
 
 <script>
-import {appConfig} from "../../env";
+import {appConfig} from "@/env";
 
 import { mapState } from 'vuex'
 
 export default {
   data() {
     return {
-      logo: appConfig.logoEstatico,
-      whatsappUrl: appConfig.redesSociales.whatsapp,
-      facebookUrl: appConfig.redesSociales.facebook,
       items: [
         {
           status: false,
@@ -92,9 +46,9 @@ export default {
         },
         {
           status: false,
-          name: 'Menu',
+          name: 'Categorías',
           icon: 'fas fa-tags',
-          tag: 'menu'
+          tag: 'categorias'
         },
         {
           status: false,
@@ -111,18 +65,14 @@ export default {
         }
       ],
       activeItem: 'inicio',
-      loading: false,
-      navMobile: false,
-      showSubmenu: false
+      loading: false
     }
   },
   methods: {
     to(item) {
-      if(item.tag == 'menu') {
-        this.navMobile = true
+      if(item.tag == 'categorias') {
+        this.$store.commit('setShowCategoriesMobile', true)
       } else {
-        this.navMobile = false
-
         // Cierra modal de categorías
         this.$store.commit('setShowCategoriesMobile', false)
 
@@ -143,7 +93,6 @@ export default {
             } else {
               this.$router.push('/mi-cuenta')
             }
-            
           } else {
             this.$bvModal.show('modal-auth')
           }
@@ -153,19 +102,26 @@ export default {
       // Asignar item activo
       this.activeItem = item.tag
     },
-    toRoute(route) {
-      this.navMobile = false
-      
-      this.$router.push(route)
+    logout() {
+      this.$apolloHelpers.onLogout()
+        .then(() => {
+            this.$cookies.remove(appConfig.userData)
+
+            if(this.$route.path === '/') {
+                this.$store.commit('reloadPage')
+            } else {
+                this.$router.push('/')
+            }
+        })
     }
   },
   computed: {
     ...mapState(['showCategoriesMobile', 'modalCarrito']),
     currentUser: function () {
-      return this.$cookies.get(appConfig.nameToken) ? true : false
+      return !!this.$apolloHelpers.getToken()
     },
-    userData: function() {
-      return this.$cookies.get('k_user_data')
+    userData: function () {
+      return this.$cookies.get(appConfig.userData)
     }
   }
 }
@@ -184,7 +140,7 @@ export default {
 
   &__menu {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-column-gap: .1rem;
 
     position: absolute;
@@ -199,43 +155,7 @@ export default {
   }
 
   &__link-text {
-    font-size: 1em;
+    font-size: .9em;
   }
-}
-
-.menu-mobile {
-  height: 90vh;
-
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-
-  &__logo {
-    width: 70vw;
-    
-    border-radius: .3rem;
-  }
-}
-
-.nav__link-mobile {
-  font-size: 1.3em;
-  color: white;
-
-  margin-bottom: .5rem;
-}
-
-.nav__link-mobile-submenu {
-  font-size: 1em;
-  color: white;
-}
-
-.close-icon {
-  font-size: 1.7em;
-  
-  position: absolute;
-  top: 15vh;
-  right: 15vw;
 }
 </style>

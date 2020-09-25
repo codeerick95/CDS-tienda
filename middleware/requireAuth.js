@@ -1,10 +1,11 @@
-// Solo requiere autenticarse, sin importar tipo de usuario
+// Middleware global, solo necesita token para ingresar
+
 import { appConfig } from "../env";
 
 export default function ({ app, redirect }) {
-  const cookieToken = app.$cookies.get(appConfig.nameToken) ? true : false
+  const hasToken = !!app.$apolloHelpers.getToken()
 
-  if (!cookieToken) {
+  if (!hasToken) {
     redirect('/')
   }
 }

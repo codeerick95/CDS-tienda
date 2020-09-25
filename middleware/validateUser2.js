@@ -1,11 +1,11 @@
-import { appConfig } from "../env";
+import { appConfig } from "@/env";
 
 export default function ({ app, redirect }) {
-  const cookieToken = app.$cookies.get(appConfig.nameToken) ? true : false
+  const hasToken = !!app.$apolloHelpers.getToken()
 
-  const data = app.$cookies.get('k_user_data')
+  const data = app.$cookies.get(appConfig.userData)
 
-  if (!cookieToken || data.typeUser != 2) {
+  if (!hasToken || data.typeUser != 2) {
     redirect('/')
   }
 }

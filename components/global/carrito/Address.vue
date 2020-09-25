@@ -35,7 +35,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="addressLima">Dirección: </label>
-                    <input type="text" id="addressLima" class="form-control" required v-model="addressLima">
+                    <input type="text" id="addressLima" class="form-control" autocomplete="off" required v-model="addressLima">
                   </div>
                 </div>
               </div>
@@ -78,14 +78,14 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="nameAgency">Nombre de la agencia</label>
-                    <input id="nameAgency" type="text" class="form-control" v-model="nameAgency">
+                    <input id="nameAgency" type="text" class="form-control" autocomplete="off" v-model="nameAgency">
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="addressAgency">Dirección de la agencia a enviar</label>
-                    <input id="addressAgency" type="text" class="form-control" v-model="addressAgency">
+                    <input id="addressAgency" type="text" class="form-control" autocomplete="off" v-model="addressAgency">
                   </div>
                 </div>
               </div>
@@ -94,7 +94,7 @@
 
           <div class="form-group mt-3">
             <label for="phone">Número de contacto</label>
-            <input type="number" id="phone" class="form-control" v-model="phone">
+            <input type="number" id="phone" class="form-control" autocomplete="off" v-model="phone">
           </div>
 
           <!-- Gratuito -->
@@ -155,14 +155,14 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label for="ruc">Ruc</label>
-                    <input id="ruc" type="text" class="form-control" v-model="ruc">
+                    <input id="ruc" type="text" class="form-control" autocomplete="off" v-model="ruc">
                   </div>
                 </div>
 
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label for="razonSocial">Razón social</label>
-                    <input id="razonSocial" type="text" class="form-control" v-model="razonSocial">
+                    <input id="razonSocial" type="text" class="form-control" autocomplete="off" v-model="razonSocial">
                   </div>
                 </div>
 
@@ -384,18 +384,18 @@
 
         if(this.typeShipping.id == 1) {
 
-          if(this.validarEnvioLima && this.phone) {
+          if(this.validarEnvioLima) {
             status = true
           }
 
         } else if(this.typeShipping.id == 2) {
 
-          if(this.validarEnvioProvincia && this.phone) {
+          if(this.validarEnvioProvincia) {
             status = true
           }
 
         } else if(this.typeShipping.id == 3) {
-          if(this.validarEnvioGratuito && this.phone) {
+          if(this.validarEnvioGratuito) {
             status = true
           }
         }

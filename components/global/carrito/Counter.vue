@@ -1,20 +1,77 @@
 <template>
-  <div class="counter text-center">
-    <!-- <button class="btn btn-sm btn-outline-primary">
+  <div class="counter d-flex justify-content-md-center align-items-center w-100">
+    <button class="btn btn-sm btn-outline-primary px-1" @click.prevent="agregarOQuitar('disminuir')">
       <i class="fas fa-minus"></i>
-    </button> -->
+    </button>
 
-    <span class="lead mx-2">{{ quantity }}</span>
+    <span class="mx-2">{{ quantity }}</span>
 
-    <!-- <button class="btn btn-sm btn-outline-primary">
+    <button type="button" class="btn btn-sm btn-outline-primary px-1" @click.prevent="agregarOQuitar('agregar')">
       <i class="fas fa-plus"></i>
-    </button> -->
+    </button>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['quantity']
+    props: ['quantity', 'producto'],
+    methods: {
+      agregarOQuitar(tipo) {
+          let objectToLocalStorage = {
+            id: this.producto.id,
+            name: this.producto.name,
+            quantity: 1,
+            price: this.producto.price,
+            image: this.producto.image,
+            slug: this.producto.slug
+          }
+
+          let oldCart = []
+
+          // Si existe el carrito recuperamos los datos guardados
+          if(localStorage.getItem("kira_cart")) {
+            let productsLocalStorage = localStorage.getItem("kira_cart")
+            oldCart = JSON.parse(productsLocalStorage)
+          }
+
+          // Variable de utilidad para saber si el producto existe en el carrito
+          let exist = false
+
+          // Si ya existe solo añadimos la cantidad
+          oldCart.forEach(item => {
+            if(item.id == objectToLocalStorage.id) {
+
+              if(tipo === 'disminuir') {
+
+                // Validar que haya más de uno para restar
+                if(parseInt(this.producto.quantity) > 1) {
+                  item.quantity -= parseInt(objectToLocalStorage.quantity)
+                }
+
+              } else if(tipo === 'agregar') {
+
+                item.quantity += parseInt(objectToLocalStorage.quantity)
+              }
+              
+
+              exist = true
+            }
+          })
+
+          // Si no existe añadimos todo el producto
+          if(!exist) {
+            oldCart.push(objectToLocalStorage)
+          }
+
+          // Guarda los nuevos productos
+          localStorage.setItem("kira_cart", JSON.stringify(oldCart));
+
+          // Realiza el conteo de productos en local storage
+          this.$store.commit('setNroItemsCarrito', oldCart.length)
+
+          this.$emit('cambioEnCantidad')
+      }
+    }
   }
 </script>
 

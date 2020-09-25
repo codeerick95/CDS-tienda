@@ -1,4 +1,5 @@
 export const appConfig = {
+    userData: 'mmsdata', // nombre asignado a la cookie que guarda datos del usuario
     logo: 'https://imagenes.softaki.com/app/MMS/MMS-Logo-Fb.webp',
     logoEstatico: '/logo-mms-peru.png',
     nameToken: 'ktoken',

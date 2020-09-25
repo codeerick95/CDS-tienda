@@ -12,18 +12,25 @@
 
             <h1 class="order-created__title font-weight-bold mt-1">Pedido registrado.</h1>
 
-            <p class="lead mt-3">
+            <p class="mt-3">
               Puede revisar los detalles del pedido <a href="" @click.prevent="to()">Aquí</a>
             </p>
           </section>
         </div>
       </div>
     </div>
+
+    <destacados class="mt-5"></destacados>
   </section>
 </template>
 
 <script>
+  import Destacados from "@/components/products/Destacados";
+
   export default {
+    components: {
+      Destacados
+    },
     methods: {
       to() {
         this.$router.push('/mi-cuenta')
@@ -37,7 +44,7 @@
 <style lang="scss">
 .order-created {
   &__title {
-    font-size: 2.3em;
+    font-size: 2em;
   }
 
   &__subtitle {

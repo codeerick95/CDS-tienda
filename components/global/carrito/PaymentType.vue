@@ -1,4 +1,3 @@
-<script src="../../../../mundo-millonario/nuxt.config.js"></script>
 <template>
   <div class="container select-payment">
     <div class="row">
@@ -14,7 +13,7 @@
       </div>
 
       <!-- Bancos -->
-      <div class="col-md-12" v-if="paymentType == 'transferencia'">
+      <div class="col-md-12" v-if="paymentType == 'tranferencia'">
         <div class="row">
           <div class="col-md-12 mt-3 mb-1">
             <p class="text-danger">Seleccione un banco:</p>
@@ -29,11 +28,11 @@
                 <div class="d-flex justify-content-center">
                   <img :src="b.imagen.url" :alt="b.titulo" class="select-payment__bank-image">
                 </div>
-                <h2 class="lead text-center mt-2">{{ b.titulo }}</h2>
+                <h2 class="medium-text text-center mt-2 text-primary">{{ b.titulo }}</h2>
 
                 <section class="select-payment__bank-info">
-                  <span class="small">Número de cuenta:</span>
-                  <p class="mb-0 text-dark">{{ b.numero }}</p>
+                  <span class="medium-text">Número de cuenta:</span>
+                  <p class="mb-0 lead text-dark">{{ b.numero }}</p>
                 </section>
               </div>
             </div>
@@ -57,17 +56,17 @@
                 <div class="d-flex justify-content-center">
                   <img :src="e.foto_principal.url" :alt="e.titulo" class="select-payment__bank-image">
                 </div>
-                <h2 class="lead text-center mt-2">{{ e.titulo }}</h2>
+                <h2 class="medium-text text-center mt-2 text-primary">{{ e.titulo }}</h2>
 
-                <section class="select-payment__bank-info mt-3">
+                <section class="select-payment__bank-info mt-3" v-if="e.fotoQr">
                   <span class="font-weight-bold text-primary">Código QR:</span>
                   <div class="d-flex justify-content-center">
                     <img :src="e.fotoQr.url" :alt="e.titulo" class="img-fluid">
                   </div>
 
                   <div class="mt-2">
-                    <span class="small">Número de celular:</span>
-                    <p class="mb-0 text-dark">{{ e.nroCelular }}</p>
+                    <span class="medium-text">Número de celular:</span>
+                    <p class="mb-0 lead text-dark">{{ e.nroCelular }}</p>
                   </div>
                 </section>
               </div>
@@ -82,7 +81,9 @@
         <div class="card-footer text-right d-flex justify-content-between w-100">
           <button class="btn btn-outline-danger" @click="back()">Atrás</button>
 
-          <button class="btn btn-primary" :disabled="!selected" @click.prevent="submit()" v-if="!inProcess">Procesar compra</button>
+          <button class="btn btn-primary" :disabled="!selected" @click="confirmTypePayment()">Siguiente</button>
+
+          <!-- <button class="btn btn-primary" :disabled="!selected" @click.prevent="submit()" v-if="!inProcess">Procesar compra</button> -->
         </div>
       </div>
     </div>
@@ -98,9 +99,9 @@
   export default {
     data() {
       return {
-        paymentType: null,
+        paymentType: 'tranferencia',
         paymentOptions: [
-          { text: 'Tranferencia bancaria', value: 'transferencia' },
+          { text: 'Tranferencia bancaria', value: 'tranferencia' },
           { text: 'Efectivo móvil', value: 'efectivo' }
         ],
         banks: [],
@@ -166,7 +167,7 @@
           this.banks[index].status = true
 
           // Añadir últimos campos a vuex
-          data.input1.TipoPago = this.paymentType === 'transferencia' ? 1 : 2
+          data.input1.TipoPago = this.paymentType === 'tranferencia' ? 1 : 2
 
           let bank = this.banks.find(item => item.status == true)
 
@@ -242,10 +243,8 @@
 
         this.$emit('prev')
       },
-      submit() {
-        this.inProcess = true
-
-        this.$emit('proccessOrder')
+      confirmTypePayment() {
+        this.$emit('confirmTypePayment')
       }
     },
     computed: {

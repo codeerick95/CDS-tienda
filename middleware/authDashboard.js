@@ -1,12 +1,15 @@
-// Verifica que haya un usuario logueado y sea administrador
-import { appConfig } from "../env";
+import { appConfig } from "@/env";
 
-export default function ({ app, redirect }) {
-  const cookieToken = app.$cookies.get(appConfig.nameToken) ? true : false
+export default ({app, redirect}) => {
+  const hasToken = !!app.$apolloHelpers.getToken()
 
-  const data = app.$cookies.get('k_user_data')
-
-  if (!cookieToken || data.typeUser != 1) {
+  const data = app.$cookies.get(appConfig.userData)
+  
+  if (!hasToken || data.typeUser != 1) {
     redirect('/')
+    /* error({
+      errorCode:503,
+      message:'You are not allowed to see this'
+    }) */
   }
 }

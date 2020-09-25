@@ -1,0 +1,15 @@
+mutation SubirVoucherPedido($input1:PedidoInput!,$voucher:Upload) {
+  SubirVoucherPedido(input1:$input1,voucher:$voucher) {
+    id
+    fechaPedido
+    EstadoPedido
+    TipoPago
+    banco
+    nroOperacion
+    TipoEnvio
+    costoEnvio
+    precioTotal
+    voucher
+    direccionEnvio
+  }
+}

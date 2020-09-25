@@ -1,23 +1,33 @@
 
 <template>
-  <article class="card product bg-white animated fadeIn" v-if="product">
+  <article class="card product bg-white animated fadeIn border-0" v-if="product">
 
     <div class="card__header position-relative overflow-hidden">
       <img :src="product.foto_real.url" :alt="product.nombre" class="product__image" @click.prevent="to()">
     </div>
 
-    <div class="card-body px-2 pt-3 pb-1 h-100 text-left d-flex flex-column justify-content-between h-100 position-relative">
-        <h3 class="product__price product__price--discount bg-danger text-white my-0 mr-2 py-1 px-2" v-if="product.precio_descuento">S/. {{ humanizeNumber(parseFloat(product.precio_descuento).toFixed(2)) }}</h3>
+    <div class="card-body bg-light border-0 px-2 pt-3 pb-1 text-left d-flex flex-column justify-content-between position-relative">
+        <div>
+          <h3 class="product__price product__price--discount bg-danger text-white my-0 mr-2 py-1 px-2" v-if="product.precio_descuento">S/ {{ humanizeNumber(parseFloat(product.precio_descuento).toFixed(2)) }}</h3>
 
-        <a href="" class="product__title text-decoration-none mt-1" @click.prevent="to()">{{ product.nombre | title }}</a>
+          <a href="" class="product__title text-decoration-none mt-2" @click.prevent="to()">{{ product.nombre | title }}</a>
 
-        <!-- Precios -->
-        <div class="product__price-container d-flex flex-column flex-md-row mt-lg-1">
-          <!-- Si existe oferta -->
-          <h3 class="product__price product__price--through my-0 mr-2" v-if="product.precio_descuento">S/ {{ humanizeNumber(parseFloat(product.precio_real).toFixed(2)) }}</h3>
+          <!-- Precios -->
+          <div class="product__price-container d-flex flex-column flex-md-row pt-0">
+            <!-- Si existe oferta -->
+            <div class="d-flex align-items-center" v-if="product.precio_descuento">
+              <span class="text-muted">Antes:</span>
+              <h3 class="product__price product__price--through my-0 ml-2">
+                S/ {{ humanizeNumber(parseFloat(product.precio_real).toFixed(2)) }}
+              </h3>
+            </div>
 
-          <!-- Si no hay oferta -->
-          <h4 class="product__price my-0" v-else>S/ {{ humanizeNumber(parseFloat(product.precio_real).toFixed(2)) }}</h4>
+            <!-- Si no hay oferta -->
+            <h4 class="product__price my-0" v-else>
+              <span class="text-muted">A solo:</span>
+              S/ {{ humanizeNumber(parseFloat(product.precio_real).toFixed(2)) }}
+            </h4>
+          </div>
         </div>
 
         <button type="button" class="btn btn-sm btn-block btn-success product__btn mt-1 mr-2 py-1" @click.stop="addToCart()" v-if="product.stok_real >= 1">
@@ -126,8 +136,10 @@
           this.$toast.success('Producto añadido.', {
             duration : 3000
           })
+
+          // Emitir evento para actualizar carrito en caso ya se esté mostrando
+          this.$emit('agregadoAlCarrito')
         }
-  
       },
     },
     computed: {
@@ -143,12 +155,10 @@
 
 <style lang="scss">
 .product {
-  height: 42vh;
-  
   border: 1px solid rgba($dark, .1) !important;
 
   @media (min-width: 768px) {
-    height: auto;
+    height: 20vw;
 
     border: 3px solid white;
   }
@@ -190,6 +200,10 @@
   .card__header {
     height: 27vh;
 
+    @media (min-width: 768px) {
+      height: 30vw;
+    }
+
     .position-relative {
       z-index: 1000;
     }
@@ -216,7 +230,7 @@
   }
 
   &__btn {
-    display: none;
+    /* display: none; */
 
     @media (min-width: 768px) {
       display: block;

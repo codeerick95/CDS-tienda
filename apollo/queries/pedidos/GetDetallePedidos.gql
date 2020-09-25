@@ -1,7 +1,6 @@
 query GetDetallePedidos($id_pedido:Int){
   GetDetallePedidos(id_pedido:$id_pedido) {
     id
-    imagen
     nombre
     cantidad
     precio
@@ -18,7 +17,14 @@ query GetDetallePedidos($id_pedido:Int){
       precio_descuento
       stok_minimo
       stok_real
-      
+      foto_real{
+        id
+        url
+      }
+      open_graph{
+        id
+        url
+      }
       keywords
       favoritos
       estado

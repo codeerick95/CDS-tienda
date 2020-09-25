@@ -12,6 +12,10 @@
       <input type="password" id="password" class="form-control" v-model="password">
     </div>
 
+    <div class="text-center" v-if="error">
+      <p class="small">Correo o contraseña incorrectos.</p>
+    </div>
+
     <div class="form-group">
       <input type="submit" class="btn btn-block btn-primary" :disabled="!validate || loading ? true : false" :value="loading ? 'Ingresando...' : 'Ingresar'">
     </div>
@@ -19,7 +23,7 @@
 </template>
 
 <script>
-import { appConfig } from "../../../env";
+import { appConfig } from "@/env";
 
 import login from '@/apollo/mutations/login'
 
@@ -33,50 +37,58 @@ export default {
     }
   },
   methods: {
-    login() {
-      this.loading = true
+    async login () {
+        if(this.validate) {
+            this.error = false
+            this.loading = true
 
-      this.error = false
+            try {
+                const input = {
+                    email: this.email,
+                    password: this.password
+                }
 
-      let input = {
-        email: this.email,
-        password: this.password
-      }
+                const res = await this.$apollo.mutate({
+                    mutation: login,
+                    variables: {
+                        input
+                    }
+                }).then(res => {
+                    // Se verifica que no haya error en el token
+                    if(res.data.login.api_token != "ERROR") {
+                        this.$apolloHelpers.onLogin(res.data.login.api_token)
+                        .then(() => {
+                            this.loading = false
 
-      // Call to the graphql mutation
-      this.$apollo.mutate({
-        mutation: login,
-        variables: {
-          input
-        },
-      })
-      .then((response) => {
-        // Si es null se muestra el error
-        if(response.data.login.id === "ERROR" && response.data.login.token === "ERROR") {
-          this.error = {
-            status: true,
-            message: 'Correo o contraseña incorrectos'
-          }
-        } else {
+                            const userData = JSON.stringify(res.data.login)
 
-          let token = response.data.login.api_token,
-            userData = JSON.stringify(response.data.login)
+                            // Guarda datos en cookies
+                            this.$cookies.set(appConfig.userData, userData, {
+                              maxAge: 60 * 60 * 24 * 7
+                            })
 
-          // Guarda datos en cookies
-          this.$cookies.set(appConfig.nameToken, token)
-          this.$cookies.set('k_user_data', userData)
+                            // Redirigir según tipo de usuario
+                            if(res.data.login.typeUser === 1) {
+                              this.$router.push('/admin/productos')
+                            } else {
+                              this.$router.push('/mi-cuenta')
+                            }
 
-
-          this.$router.push('/admin/productos')
-
-          // Se recarga la página para poder obtener las cookies
-          setTimeout(() => {
-            this.$store.commit('reloadPage')
-          }, 1000)
+                            // Cierra modal de login
+                            this.$bvModal.hide('modal-auth')
+                        })
+                    } else {
+                        this.error = true
+                        this.loading = false
+                    }
+                })
+            
+            } catch (e) {
+                this.error = true
+                this.loading = false
+            }
         }
-      })
-      .catch(() => this.loading = false)
-    },
+    }
   },
   computed: {
     validate: function() {

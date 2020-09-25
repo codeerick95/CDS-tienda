@@ -21,7 +21,8 @@
                         <table class="table table-striped">
                           <thead>
                           <tr>
-                            <th scope="col"></th>
+                            <th scope="col">#</th>
+                            <td></td>
                             <th scope="col">Nombre</th>
                             <th scope="col">Cantidad</th>
                             <th scope="col">Precio unidad</th>
@@ -32,19 +33,23 @@
                             <td>
                               {{ index + 1 }}
                             </td>
-                            
+
+                            <td>
+                              <img :src="product.data.foto_real.url" width="30px" alt="" v-if="product.data">
+                            </td>
+
                             <td>
                               <span class="text-primary">
                                 {{ product.nombre }}
                               </span>
                             </td>
-
+    
                             <td>
                               <span>{{ product.cantidad }}</span>
                             </td>
 
                             <td>
-                              <span>S/. {{ product.precio }}</span>
+                              <span>S/. {{ humanizeNumber(parseFloat(product.precio).toFixed(2)) }}</span>
                             </td>
                           </tr>
                           </tbody>
@@ -93,7 +98,7 @@
                   <h2 class="lead font-weight-bold mt-5">Información adiccional:</h2>
 
                   <template v-if="info2.data2">
-                    <div class="card">
+                    <div class="card border-0">
                       <div class="card-body pl-0">
                         <p class="d-flex flex-column flex-md-row align-items-center border-bottom">
                           <span class="text-muted mr-2">Fecha de pedido:</span>
@@ -125,8 +130,7 @@
                           <span>{{ info2.data2.banco }}</span>
                         </p>
 
-
-                        <p class="d-flex flex-column flex-md-row align-items-center border-bottom" v-if="tipoUsuario == 1">
+                        <p class="d-flex flex-column flex-md-row align-items-center border-bottom">
                           <span class="text-muted mr-2">Dirección a enviar:</span>
                           <span>{{ info2.data2.direccionEnvio }}</span>
                         </p>
@@ -146,6 +150,39 @@
                             <span class="text-muted mr-2">Correo electrónico:</span>
                             <span>{{ info2.data3.email }}</span>
                           </p>
+
+                          <section>
+                            <p class="d-flex flex-column flex-md-row align-items-center border-bottom">
+                              <span class="text-muted mr-2">Voucher:</span>
+
+                              <a href="" class="btn btn-sm btn-primary ml-3 mb-1" @click.prevent="mostrarDropzone = true" v-if="!info2.data2.voucher && tipoUsuario == 2 && !mostrarDropzone && !voucher">Subir comprobante de pago</a>
+                            </p>
+
+                            <img :src="info2.data2.voucher" alt="" width="300px" class="img-fluid" v-if="info2.data2.voucher">
+                          </section>
+
+                          <!-- Dropzone -->
+                          <section>
+                            <dropzone
+                                ref="imgDropZone"
+                                id="customdropzone"
+                                :options="dropzoneConfig"
+                                @vdropzone-complete="uploadFiles"
+                                v-show="mostrarDropzone"
+                            ></dropzone>
+
+                            <section v-if="previewImage">
+                                <div class="preview">
+                                    <img :src="previewImage" alt="Imagen de usuario" class="img-fluid">
+                                </div>
+
+                                <template v-if="!info2.data2.voucher">
+                                  <a href="" @click.prevent="removeImage()" class="text-danger d-inline-block mb-2">Cambiar imagen</a>
+
+                                  <button class="btn btn-sm btn-primary ml-3" :disabled="loadingUpload" @click="subirVoucher()">{{ loadingUpload ? 'Actualizando...' : 'Actualizar' }}</button>
+                                </template>
+                            </section>
+                          </section>
                         </template>
                       </div>
                     </div>
@@ -161,9 +198,18 @@
 </template>
 
 <script>
+  import { appConfig } from '@/env'
+  import { dropzoneConfig } from '@/utilities/dropzoneConfig'
+
   // Queries
-  import GetDetallePedido from '@/apollo/queries/pedidos/GetDetallePedido'
+  import GetDetallePedidos from '@/apollo/queries/pedidos/GetDetallePedidos'
   import GetPedidoDirecciones from '@/apollo/queries/pedidos/GetPedidoDirecciones'
+
+  // Mutations
+  import SubirVoucherPedido from '@/apollo/mutations/pedidos/SubirVoucherPedido'
+
+  import Dropzone from 'nuxt-dropzone'
+  import 'nuxt-dropzone/dropzone.css'
 
   export default {
     middleware: 'requireAuth',
@@ -174,22 +220,45 @@
         info2: {},
         loading: false,
         costo: '',
-        cliente: ''
+        cliente: '',
+        cambiarVoucher: false,
+        voucher: null,
+        previewImage: null,
+        loadingUpload: false,
+        dropzoneConfig,
+        mostrarDropzone: false
       }
     },
     mounted() {
-      this.getInfo()
+      this.init()
+    },
+    components: {
+      Dropzone
+    },
+    methods: {
+      humanizeNumber(n) {
+        // Esta función agrega comas y puntos al total
+        n = n.toString()
+        while (true) {
+          var n2 = n.replace(/(\d)(\d{3})($|,|\.)/g, '$1,$2$3')
+          if (n == n2) break
+          n = n2
+        }
+
+        return n
+      },
+      init() {
+        this.getInfo()
         .then(() => {
           this.getDirecciones()
         })
-    },
-    methods: {
+      },
       getInfo() {
         return new Promise(resolve => {
           let id_pedido = this.id
 
           this.$apollo.query({
-            query: GetDetallePedido,
+            query: GetDetallePedidos,
             fetchPolicy: 'no-cache',
             variables: {
               id_pedido
@@ -278,6 +347,59 @@
         } else {
           this.costo = 'S/ 0.00'
         }
+      },
+      uploadFiles(file) {
+        // Crea una url local para mostrar imagen previa
+        this.previewImage = URL.createObjectURL(file)
+
+        this.voucher = file
+
+        this.$refs.imgDropZone.disable()
+
+        this.mostrarDropzone = false
+      },
+      removeImage() {
+        this.previewImage = ''
+
+        this.$refs.imgDropZone.removeAllFiles()
+        this.$refs.imgDropZone.enable()
+
+        this.mostrarDropzone = true
+      },
+      subirVoucher() {
+        this.loadingUpload = true
+
+        let input1 = {
+          "id": parseInt(this.id)
+        }
+
+        let voucher = this.voucher
+
+        this.$apollo.mutate({
+          mutation: SubirVoucherPedido,
+          variables: {
+            input1,
+            voucher
+          }
+        })
+        .then(() => {
+          this.$toast.success('Voucher actualizado', {
+            duration : 3000
+          })
+
+          this.loadingUpload = false
+
+          this.init()
+
+          this.previewImage = null
+        })
+        .catch(() => {
+          this.$toast.error('Ocurrió un error, inténtelo nuevamente.', {
+            duration : 3000
+          })
+
+          this.loadingUpload = false
+        })
       }
     },
     computed: {
@@ -300,7 +422,7 @@
         return price
       },
       tipoUsuario: function() {
-        const data = this.$cookies.get('k_user_data')
+        const data = this.$cookies.get(appConfig.userData)
 
         return data.typeUser
       }

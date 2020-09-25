@@ -1,6 +1,36 @@
 <template>
   <div>
-    <div class="table-responsive cart-table">
+    <!-- Mobile -->
+    <section class="d-md-none" v-if="products.length >= 1">
+      <article class="card border-bottom" v-for="(product, index) in products" :key="index">
+        <div class="card-body px-1">
+          <div class="row">
+            <div class="col-4">
+              <img :src="product.image" alt="" class="img-fluid">
+            </div>
+            <div class="col-8 pl-1 pr-0">
+              <a href="" class="d-inline-block mt-1" @click.prevent="toProduct(product.slug)">
+                {{ product.name | title }}
+              </a>
+
+              <div class="text-left my-3">
+                <counter :quantity="product.quantity" :producto="product" @cambioEnCantidad="cambioEnCantidad()"></counter>
+              </div>
+
+              <p class="mt-0 mb-1">
+                <span class="text-muted">Precio unidad:</span>
+                <span>S/. {{ humanizeNumber(parseFloat(product.price).toFixed(2)) }}</span>
+              </p>
+
+              <span class="icon pointer d-inline-block mt-1 text-danger" @click="removeProduct(index)">Eliminar</span>
+
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    
+    <div class="table-responsive cart-table d-none d-md-block">
 
       <table class="table table-hover text-center">
         <thead>
@@ -18,16 +48,16 @@
             <img :src="product.image" alt="" class="cart-table__image">
           </td>
           <td>
-            <a href="" class="d-inline-block mt-1" @click.prevent="toProduct(product.slug)">
+            <a href="" class="d-inline-block mt-1 medium-text" @click.prevent="toProduct(product.slug)">
               {{ product.name | title }}
             </a>
           </td>
           <td>
-            <counter :quantity="product.quantity"></counter>
+            <counter :quantity="product.quantity" :producto="product" @cambioEnCantidad="cambioEnCantidad()"></counter>
           </td>
 
           <td>
-            <span class="d-inline-block mt-1">S/. {{ product.price }}</span>
+            <span class="d-inline-block mt-1">S/. {{ humanizeNumber(parseFloat(product.price).toFixed(2)) }}</span>
           </td>
 
           <td>
@@ -61,11 +91,25 @@
     },
     mounted() {
       setTimeout(() => {
-        let productsLocalStorage = localStorage.getItem('kira_cart')
-        this.products = JSON.parse(productsLocalStorage)
+        this.getProducts()
       }, 500)
     },
     methods: {
+      getProducts() {
+        let productsLocalStorage = localStorage.getItem('kira_cart')
+        this.products = JSON.parse(productsLocalStorage)
+      },
+      humanizeNumber(n) {
+        // Esta función agrega comas y puntos al total
+        n = n.toString()
+        while (true) {
+          var n2 = n.replace(/(\d)(\d{3})($|,|\.)/g, '$1,$2$3')
+          if (n == n2) break
+          n = n2
+        }
+
+        return n
+      },
       toProduct(slug) {
         // Dirige a vista del producto
         this.$router.push({name: 'productos-slug', params: {slug}})
@@ -124,17 +168,22 @@
 
           this.$bvModal.show('modal-auth')
         }
+      },
+      cambioEnCantidad() {
+        this.getProducts()
+
+        this.$emit('cambioEnCantidad')
       }
     },
     computed: {
       ...mapState(['modalCarrito']),
       currentUser: function () {
-        return this.$cookies.get(appConfig.nameToken) ? true : false
+        return !!this.$apolloHelpers.getToken()
       }
     },
     filters: {
       title: function (val) {
-        return val.length >= 10 ? `${val.substring(0, 10)}...` : val
+        return val.length >= 25 ? `${val.substring(0, 25)}...` : val
       }
     }
   }

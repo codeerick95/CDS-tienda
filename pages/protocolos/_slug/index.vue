@@ -300,7 +300,7 @@ export default {
     },
     computed: {
         currentUser: function() {
-            return this.$cookies.get(appConfig.nameToken) ? true : false
+            return !!this.$apolloHelpers.getToken()
         },
         protocolo: function() {
             if(this.GetSlugProtocolos) {

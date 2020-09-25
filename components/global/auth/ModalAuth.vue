@@ -6,7 +6,7 @@
           {{ setTitle }}
         </h3>
 
-        <a href="" class="modal-buttons__link mr-3 font-weight-bold" @click.prevent="$bvModal.hide('modal-auth')" v-if="!mostrarCamposDocumento && currentUser">
+        <a href="" class="modal-buttons__link mr-3 font-weight-bold text-right" @click.prevent="$bvModal.hide('modal-auth')" v-if="!mostrarCamposDocumento">
           <i class="fas fa-chevron-left"></i>
           Seguir comprando
         </a>
@@ -39,8 +39,8 @@
 
             <div class="col-md-6">
               <div class="form-group">
-                <label for="fecha_nacimento" class="text-muted">Fecha de nacimiento</label>
-                <input type="date" id="fecha_nacimento" class="form-control" v-model="fecha_nacimento">
+                <label for="fecha_nacimiento" class="text-muted">Fecha de nacimiento</label>
+                <input type="date" id="fecha_nacimiento" class="form-control" v-model="fecha_nacimiento">
               </div>
             </div>
 
@@ -58,12 +58,12 @@
         <div class="col-lg-12">
           <div class="card modal-auth__card position-relative border-0">
             <div class="card-body h-100">
-              <div class="d-flex justify-content-center mb-5">
-                <img src="/logo-tienda.jpg" alt="Logo" class="modal-auth__logo">
+              <div class="d-flex justify-content-center">
+                <img src="/logo.png" alt="Logo La Tiendita" class="modal-auth__logo">
               </div>
 
               <section>
-                <button type="button" class="btn btn-block btn-primary mb-2 rounded-0" @click="loginWithFacebook()">
+                <button type="button" class="btn btn-block rounded-0 btn-primary mb-2" @click="loginWithFacebook()">
                   <span class="font-weight-bold mr-1">
                     <i class="fab fa-facebook-f"></i>
                   </span>
@@ -77,13 +77,20 @@
                   Ingresar con Google
                 </GoogleLogin>
 
-                <button type="button" class="btn btn-block btn-success rounded-0" @click="currentSlide = 1">
+                <button type="button" class="btn btn-block rounded-0 btn-success" @click="currentSlide = 1">
                   <span class="font-weight-bold mr-1">
                     <i class="far fa-envelope"></i>
                   </span>
                   Ingresar con correo electrónico
                 </button>
               </section>
+
+              <div class="text-center bg-light mt-3">
+                <span class="small">Al ingresar o registrarse acepta los</span>
+                <a href="" @click.prevent="aTerminos()" class="d-inline-block">
+                  Términos y condiciones
+                </a>
+              </div>
             </div>
 
             <div class="card-footer text-center text-dark bg-white">
@@ -102,7 +109,7 @@
 
         <div class="col-lg-12 animated fadeIn" v-if="currentSlide">
           <div class="card bg-light">
-            <div class="card-body">
+            <div class="card-body px-0">
               <transition-group enter-active-class="animated fadeIn">
                 <login key="1" v-if="currentSlide == 1"></login>
 
@@ -118,7 +125,7 @@
 </template>
 
 <script>
-  import { appConfig } from "@/env";
+  import { appConfig } from "../../../env";
 
   // Components
   import Login from '@/components/global/auth/Login'
@@ -136,11 +143,11 @@
         text: '',
         currentSlide: 0,
         logo: appConfig.logo,
-        mostrarCamposDocumento: false, // Cuando se registra con redes sociales
+        mostrarCamposDocumento: false,
         dataForRegister: {},
         typeDocument: 1,
         numberDocument: '',
-        fecha_nacimento: '',
+        fecha_nacimiento: '',
         itemsDocument: [
           {
             value: 1,
@@ -187,7 +194,7 @@
                   id: response.id,
                   name: response.name,
                   last_name: response.last_name,
-                  middle_name: response.middle_name ? response.middle_name : "",
+                  middle_name: "",
                   email: response.email,
                   password: response.id,
                   image: `https://graph.facebook.com/${response.id}/picture?type=large`
@@ -223,7 +230,7 @@
             "motherSurname": data.middle_name,
             "email": data.email,
             "password": data.password,
-            "fecha_nacimento": this.fecha_nacimento,
+            "fecha_nacimiento": this.fecha_nacimiento,
             "image": data.image,
           }
 
@@ -234,30 +241,33 @@
             }
           })
             .then(response => {
-              if(response.data.login.api_token != 'ERROR') {
+              let token = response.data.login.api_token
 
-                let data = response.data.login
+              if(token != 'ERROR') {
 
-                // Guardar token en Localstorage
-                let token = data.api_token
+                this.$apolloHelpers.onLogin(token)
+                .then(() => {
+                    this.loading = false
 
-                // Guarda datos del usuario
-                this.$cookies.set(appConfig.nameToken, token)
+                    const userData = JSON.stringify(response.data.login)
 
-                let userData = JSON.stringify(response.data.login)
+                    // Guarda datos en cookies
+                    this.$cookies.set(appConfig.userData, userData, {
+                      maxAge: 60 * 60 * 24 * 7
+                    })
 
-                // Guardar datos de usuario
-                this.$cookies.set('k_user_data', userData)
+                    // Redirigir según tipo de usuario
+                    if(response.data.login.typeUser === 1) {
+                      this.$router.push('/admin/productos')
+                    } else {
+                      this.$router.push('/mi-cuenta')
+                    }
 
-                this.$bvModal.hide('modal-auth')
-
-                this.$router.push('/mi-cuenta')
-
-                // Se recarga la página para poder obtener las cookies
-                setTimeout(() => {
-                  this.$store.commit('reloadPage')
-                }, 1000)
+                    // Cierra modal de login
+                    this.$bvModal.hide('modal-auth')
+                })
               } else {
+                // Muestra campos para completar registro
                 this.mostrarCamposDocumento = true
               }
             })
@@ -309,7 +319,7 @@
         let id = profile.getId(),
           name = profile.getName(),
           last_name = profile.getFamilyName() ? profile.getFamilyName() : profile.getName(),
-          middle_name = profile.getFamilyName() ? profile.getFamilyName() : profile.getName(),
+          middle_name = "",
           email = profile.getEmail(),
           password = id,
           image = profile.getImageUrl()
@@ -325,6 +335,11 @@
         }
 
         this.loginWithEmail(dataForLogin)
+      },
+      aTerminos() {
+        this.$bvModal.hide('modal-auth')
+
+        this.$router.push('/terminos-y-condiciones')
       }
     },
     computed: {
@@ -340,9 +355,6 @@
         }
 
         return title
-      },
-      currentUser: function() {
-        return this.$cookies.get(appConfig.nameToken) ? true : false
       }
     }
   }
@@ -369,7 +381,7 @@
   }
 
   &__logo {
-    max-width: 200px;
+    max-width: 150px;
   }
 
   &__form {
@@ -388,7 +400,7 @@
     font-size: 1.1em;
 
     display: inline-block;
-    border-bottom: 3px solid rgba($danger, .9);
+    border-bottom: 3px solid rgba($danger, .95);
   }
 }
 

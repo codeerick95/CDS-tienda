@@ -1,53 +1,33 @@
 query GetProductosFavoritos($number_paginate:Int,$page:Int,$favorito:Int){
   GetProductosFavoritos(page:$page,number_paginate:$number_paginate,favorito:$favorito){
     NroItems
-    data{
-    	id
+    data {
+      id
       nombre
       slug
       descripcionCorta
       descripcionLarga
-      favoritos
-      foto_real{
+      precio_real
+      precio_descuento
+      stok_minimo
+      stok_real
+      foto_real {
         id
         url
       }
-      open_graph{
+      open_graph {
         id
         url
       }
-      galeria{
+      galeria {
         id
         url
       }
-      ProductoColores{
-            id
-            color_id
-            producto_id
-            galeria{
-              id
-              url
-            }
-
-      }
-      Tallas{
-          talla_id
-          nombreTalla
-          precio_real
-          precio_descuento
-          Colores{
-            TallaProductoColores_id
-            color_id
-            codColor
-            stok_real
-            stok_minimo
-          }
-        }
       keywords
+      favoritos
       estado
-      categoria_producto_id
       created_at
       updated_at
     }
-  	}
   }
+}
