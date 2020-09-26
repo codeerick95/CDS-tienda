@@ -28,21 +28,21 @@
           </div>
 
           <div class="col-md-4">
-            <section class="card py-3 px-2">
-              <div class="card-body">
+            <section class="card py-3 px-2 mb-3">
+              <div class="card-body border">
                 <span class="d-block mb-2 font-weight-bold">Imagen destacada</span>
 
-                <button type="button" class="btn btn-sm btn-outline-warning" @click="showModalImages('destacada')">Seleccionar imagen</button>
+                <button type="button" class="btn btn-sm btn-warning" @click="showModalImages('destacada')">Seleccionar imagen</button>
 
                 <img :src="image.url" alt="Imagen previa" class="img-fluid preview-image" v-if="image.id">
               </div>
             </section>
 
-            <section class="card py-3 px-2">
+            <section class="card border py-3 px-2">
               <div class="card-body">
                 <span class="d-block mb-2 font-weight-bold">Imagen código QR</span>
 
-                <button type="button" class="btn btn-sm btn-outline-warning" @click="showModalImages('qr')">Seleccionar imagen</button>
+                <button type="button" class="btn btn-sm btn-warning" @click="showModalImages('qr')">Seleccionar imagen</button>
 
                 <img :src="imageQr.url" alt="Imagen previa" class="img-fluid preview-image" v-if="imageQr.id">
               </div>
@@ -100,8 +100,8 @@
 
         let input = {
           titulo: this.name,
-          foto_principal: this.image.id,
-          fotoQr: this.imageQr.id,
+          foto_principal: parseInt(this.image.id) || null,
+          fotoQr: parseInt(this.imageQr.id) || null,
           nroCelular: this.number.toString()
         }
 

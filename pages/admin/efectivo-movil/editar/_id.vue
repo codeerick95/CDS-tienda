@@ -44,7 +44,7 @@
 
                 <button type="button" class="btn btn-sm btn-warning" @click="showModalImages('qr')">Seleccionar imagen</button>
 
-                <img :src="imageQr.url" alt="Imagen previa" class="img-fluid preview-image" v-if="imageQr.id">
+                <img :src="imageQr.url" alt="Imagen previa" class="img-fluid preview-image" v-if="imageQr">
               </div>
             </section>
           </div>
@@ -107,7 +107,7 @@
             this.name = this.banco.titulo
             this.number = this.banco.nroCelular
             this.image = this.banco.foto_principal
-            this.imageQr = this.banco.fotoQr
+            this.imageQr = this.banco.fotoQr || null
         },
       showModalImages(type) {
         this.typeImage = type
@@ -132,8 +132,8 @@
         let input = {
             "id": this.banco.id,
             "titulo": this.name,
-            "foto_principal": this.image.id,
-            "fotoQr": this.imageQr.id,
+            "foto_principal": parseInt(this.image.id),
+            "fotoQr": this.imageQr ? parseInt(this.imageQr.id) : null,
             "nroCelular": this.number
         }
 

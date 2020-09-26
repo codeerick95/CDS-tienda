@@ -224,7 +224,7 @@
           { text: 'Estacíon linea 1', value: 'metro' },
           { text: 'Estacíon del Metropolitano', value: 'metropolitano' }
         ],
-        envioGratuito: '',
+        envioGratuito: null,
         estacionesMetro: [],
         estacionMetro: "Angamos",
         estacionesMetropolitano: [],

@@ -115,7 +115,9 @@ export default {
       return !!this.$apolloHelpers.getToken()
     },
     userData: function () {
-      return this.$cookies.get(appConfig.userData)
+      if(this.$cookies.get(appConfig.userData)) {
+        return this.$cookies.get(appConfig.userData)
+      }
     }
   }
 }

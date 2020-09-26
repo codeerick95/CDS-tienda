@@ -162,9 +162,7 @@ export default {
     },
     userData: function () {
       if(this.$cookies.get(appConfig.userData)) {
-        let user = this.$cookies.get(appConfig.userData)
-
-        return user
+        return this.$cookies.get(appConfig.userData)
       }
     }
   }

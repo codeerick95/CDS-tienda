@@ -58,11 +58,13 @@
                 </div>
                 <h2 class="medium-text text-center mt-2 text-primary">{{ e.titulo }}</h2>
 
-                <section class="select-payment__bank-info mt-3" v-if="e.fotoQr">
-                  <span class="font-weight-bold text-primary">Código QR:</span>
-                  <div class="d-flex justify-content-center">
-                    <img :src="e.fotoQr.url" :alt="e.titulo" class="img-fluid">
-                  </div>
+                <section class="select-payment__bank-info mt-3">
+                  <template v-if="e.fotoQr">
+                    <span class="font-weight-bold text-primary">Código QR:</span>
+                    <div class="d-flex justify-content-center">
+                      <img :src="e.fotoQr.url" :alt="e.titulo" class="img-fluid">
+                    </div>
+                  </template>
 
                   <div class="mt-2">
                     <span class="medium-text">Número de celular:</span>
@@ -99,7 +101,7 @@
   export default {
     data() {
       return {
-        paymentType: 'tranferencia',
+        paymentType: null,
         paymentOptions: [
           { text: 'Tranferencia bancaria', value: 'tranferencia' },
           { text: 'Efectivo móvil', value: 'efectivo' }
