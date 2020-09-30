@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="bg-dark d-flex justify-content-end" v-if="userLogged && userData.typeUser == 1">
+    <section class="bg-dark d-flex justify-content-end" v-if="userLogged && userData && userData.typeUser == 1">
       <nuxt-link to="/admin/productos" class="btn btn-primary rounded-0">Panel de administración</nuxt-link>
     </section>
 

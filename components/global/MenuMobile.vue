@@ -147,7 +147,7 @@ export default {
 
   &__link-container {
     margin: 0 .5rem;
-    padding: .5rem;
+    padding: .5rem .2rem;
   }
 
   &__link-text {
