@@ -1,9 +1,11 @@
 export const appConfig = {
-    userData: 'mmsdata', // nombre asignado a la cookie que guarda datos del usuario
+    userData: 'mmsuserdata', // nombre asignado a la cookie que guarda datos del usuario
+    carrito: 'mmscarrito',
     logo: 'https://imagenes.softaki.com/app/MMS/MMS-Logo-Fb.webp',
     logoEstatico: '/logo-mms-peru.png',
-    nameToken: 'ktoken',
+    nameToken: 'mmstoken',
     graphUrl: 'https://logica.cdstienda.com/public/graphql',
+    culqi: 'pk_test_loDle17LkXW8LBj3',
     facebookAppId: '2809328502635267',	
     googleClientId: '52480402180-faa4fghdlqqfu7qjkui38s65enqiv8c8.apps.googleusercontent.com',
     redesSociales: {
@@ -36,7 +38,7 @@ export const appConfig = {
         titulo: 'Tienda - MMS Perú salud',
         descripcion: 'En la tienda veras nuestros mejores productos a tu alcance',
         keywords: 'tienda, mms peru, productos'
-      },
+      }
     }
 }
   

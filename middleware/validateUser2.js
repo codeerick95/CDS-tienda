@@ -5,7 +5,7 @@ export default function ({ app, redirect }) {
 
   const data = app.$cookies.get(appConfig.userData)
 
-  if (!hasToken || data.typeUser != 2) {
+  if (!hasToken || (data && data.typeUser != 2)) {
     redirect('/')
   }
 }

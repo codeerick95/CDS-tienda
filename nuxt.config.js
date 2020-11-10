@@ -30,7 +30,8 @@ export default {
     ],
     script: [
       { src: '/js/facebook-sdk.js', module: true },
-      { src: 'https://kit.fontawesome.com/3bd84f9f96.js' }
+      { src: 'https://kit.fontawesome.com/3bd84f9f96.js' },
+      { src: '/js/culqi.js', module: true }
     ]
   },
   /*
@@ -82,6 +83,10 @@ export default {
   apollo: {
     clientConfigs: {
       default: '@/plugins/apollo.js'
+    },
+    tokenName: 'mmstoken',
+    cookieAttributes: {
+      expires: 7
     }
   },
   styleResources: {

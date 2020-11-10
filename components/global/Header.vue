@@ -5,7 +5,7 @@
       <img :src="logo" alt="Logo tienda" class="logo pointer">
     </nuxt-link>
 
-    <nav class="nav d-flex align-items-center" v-if="currentUser">
+    <nav class="nav d-flex align-items-center" v-if="usuarioLogueado">
       <nuxt-link to="/" class="nav__link mr-3">Protocolos</nuxt-link>
       <nuxt-link to="/testimonios" class="nav__link mr-3">Testimonios</nuxt-link>
 
@@ -27,7 +27,7 @@
       <nuxt-link to="/tienda" class="nav__link mr-3">Tienda</nuxt-link>
     </nav>
 
-    <div class="social d-flex align-items-center pt-2" v-if="currentUser">
+    <div class="social d-flex align-items-center pt-2" v-if="usuarioLogueado">
       <a :href="whatsappUrl" target="_blank" class="social-icon mr-2 text-primary">
         <i class="fab fa-facebook"></i>
       </a>
@@ -43,6 +43,8 @@
 <script>
 import { appConfig } from "@/env";
 
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
@@ -53,9 +55,7 @@ export default {
     }
   },
   computed: {
-    currentUser: function() {
-      return !!this.$apolloHelpers.getToken()
-    }
+    ...mapState(['usuarioLogueado'])
   }
 }
 </script>

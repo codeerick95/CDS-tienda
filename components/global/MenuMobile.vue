@@ -17,7 +17,7 @@
     <div
       class="nav-mobile__link-container d-flex flex-column text-center text-white"
       @click="logout()"
-      v-if="currentUser"
+      v-if="usuarioLogueado"
     >
       <span class="icon">
         <i class="fas fa-sign-out-alt"></i>
@@ -81,7 +81,7 @@ export default {
 
       if(item.tag == 'mi-cuenta') {
 
-        if(this.currentUser) {
+        if(this.usuarioLogueado) {
           // Redirigir a cuenta
           if(this.userData.typeUser == 1) {
             this.$router.push('/admin/productos')
@@ -97,23 +97,26 @@ export default {
       this.activeItem = item.tag
     },
     logout() {
-      this.$apolloHelpers.onLogout()
-        .then(() => {
-            this.$cookies.remove(appConfig.userData)
+          this.loading = true
 
-            if(this.$route.path === '/') {
-                this.$store.commit('reloadPage')
-            } else {
-                this.$router.push('/')
-            }
+        this.$apolloHelpers.onLogout()
+          .then(() => {
+            setTimeout(() => {
+              this.$cookies.remove(appConfig.userData)
+
+              this.$store.commit('setUsuarioLogueado', false)
+
+              this.loading = false
+
+              this.$router.push('/')
+
+              this.$bvModal.show('modal-auth')
+            }, 1500)
         })
     }
   },
   computed: {
-    ...mapState(['showCategoriesMobile', 'modalCarrito']),
-    currentUser: function () {
-      return !!this.$apolloHelpers.getToken()
-    },
+    ...mapState(['showCategoriesMobile', 'modalCarrito', 'usuarioLogueado']),
     userData: function () {
       if(this.$cookies.get(appConfig.userData)) {
         return this.$cookies.get(appConfig.userData)

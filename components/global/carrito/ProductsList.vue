@@ -96,7 +96,7 @@
     },
     methods: {
       getProducts() {
-        let productsLocalStorage = localStorage.getItem('kira_cart')
+        let productsLocalStorage = localStorage.getItem(appConfig.carrito)
         this.products = JSON.parse(productsLocalStorage)
       },
       humanizeNumber(n) {
@@ -124,7 +124,7 @@
         this.products.splice(index, 1)
 
         // Guarda el nuevo array después de haber eliminado el elemento
-        localStorage.setItem("kira_cart", JSON.stringify(this.products));
+        localStorage.setItem(appConfig.carrito, JSON.stringify(this.products));
 
         this.$emit('removeProduct')
 
@@ -139,7 +139,7 @@
       },
       confirmOrder() {
         // Si existe usuario logueado
-        if(this.currentUser) {
+        if(this.usuarioLogueado) {
           let productsForMutation = []
 
           // Iterar sobre los productos del carrito para darle formato para la mutation
@@ -176,10 +176,7 @@
       }
     },
     computed: {
-      ...mapState(['modalCarrito']),
-      currentUser: function () {
-        return !!this.$apolloHelpers.getToken()
-      }
+      ...mapState(['modalCarrito', 'usuarioLogueado'])
     },
     filters: {
       title: function (val) {

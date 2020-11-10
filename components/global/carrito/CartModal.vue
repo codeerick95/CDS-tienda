@@ -157,7 +157,7 @@
     },
     methods: {
       getProductsByLocalStorage() {
-        let productsLocalStorage = localStorage.getItem('kira_cart')
+        let productsLocalStorage = localStorage.getItem(appConfig.carrito)
         if(productsLocalStorage) {
           this.products = JSON.parse(productsLocalStorage)
         }
@@ -218,7 +218,7 @@
         })
         .then(response => {
           // Eliminar carrito
-          localStorage.removeItem("kira_cart")
+          localStorage.removeItem(appConfig.carrito)
 
           this.products = []
 

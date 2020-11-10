@@ -66,6 +66,8 @@
 <script>
 import { appConfig } from '@/env'
 
+import { mapState } from 'vuex'
+
 // Mutations
 import CreateTestimonios from '@/apollo/mutations/testimonios/CreateTestimonios'
 
@@ -159,7 +161,7 @@ export default {
           .catch(() => this.loading = false)
         },
         abrirModalPublicar() {
-            if(this.currentUser) {
+            if(this.usuarioLogueado) {
                 this.$bvModal.show('modal-testimonios')
             } else {
                 this.$bvModal.show('modal-auth')
@@ -192,9 +194,7 @@ export default {
         }
     },
     computed: {
-        currentUser: function() {
-            return !!this.$apolloHelpers.getToken()
-        }
+        ...mapState(['usuarioLogueado'])
     }
 }
 </script>

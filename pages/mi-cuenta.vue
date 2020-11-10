@@ -58,7 +58,7 @@
 
               <section class="mt-3" v-else>
                 <div class="d-flex flex-column flex-md-row align-items-center">
-                  <p class="lead my-0">Aún no tiene pedidos registrados.</p>
+                  <p class="my-0">Aún no tiene pedidos registrados.</p>
                   <nuxt-link to="/tienda" class="btn btn-sm btn-primary mt-3 mt-md-0 ml-3">Visitar tienda</nuxt-link>
                 </div>
               </section>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-  import { appConfig } from "../env";
+  import { appConfig } from "@/env";
 
   // Queries
   import GetPedidosUser from '@/apollo/queries/pedidos/GetPedidosUser'
@@ -90,11 +90,7 @@ export default {
     }
   },
   mounted() {
-    if(this.user.typeUser == 1) {
-      this.$router.push('/')
-    } else {
-      this.getOrders()
-    }
+    this.getOrders()
   },
   components: {
     Banner
@@ -141,22 +137,22 @@ export default {
       return status
     },
     logout() {
-      this.loading = true
+          this.loading = true
 
-      setTimeout(() => {
-        this.$cookies.remove(appConfig.nameToken)
+        this.$apolloHelpers.onLogout()
+          .then(() => {
+            setTimeout(() => {
+              this.$cookies.remove(appConfig.userData)
 
-        this.$cookies.remove('k_user_data')
+              this.$store.commit('setUsuarioLogueado', false)
 
-        this.loading = false
+              this.loading = false
 
-        this.$router.push('/')
+              this.$router.push('/')
 
-        // Se recarga la página para poder obtener las cookies
-        setTimeout(() => {
-          this.$store.commit('reloadPage')
-        }, 1000)
-      }, 2000)
+              this.$bvModal.show('modal-auth')
+            }, 1500)
+        })
     }
   },
   computed: {

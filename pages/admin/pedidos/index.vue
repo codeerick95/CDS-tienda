@@ -73,7 +73,7 @@
 
                 <section class="mt-3" v-else>
                   <div class="d-flex align-items-center">
-                    <p class="lead my-0">Aún no tiene pedidos registrados.</p>
+                    <p class="my-0">Aún no tiene pedidos registrados.</p>
                     <nuxt-link to="/" class="btn btn-sm btn-primary ml-3">Visitar tienda</nuxt-link>
                   </div>
                 </section>

@@ -50,6 +50,8 @@
 </template>
 
 <script>
+  import { appConfig } from '@/env'
+
   import { mapState } from 'vuex'
 
   export default {
@@ -102,8 +104,8 @@
           let oldCart = []
 
           // Si existe el carrito recuperamos los datos guardados
-          if(localStorage.getItem("kira_cart")) {
-            let productsLocalStorage = localStorage.getItem("kira_cart")
+          if(localStorage.getItem(appConfig.carrito)) {
+            let productsLocalStorage = localStorage.getItem(appConfig.carrito)
             oldCart = JSON.parse(productsLocalStorage)
           }
 
@@ -125,7 +127,7 @@
           }
 
           // Guarda los nuevos productos
-          localStorage.setItem("kira_cart", JSON.stringify(oldCart));
+          localStorage.setItem(appConfig.carrito, JSON.stringify(oldCart));
 
           // Realiza el conteo de productos en local storage
           this.$store.commit('setNroItemsCarrito', oldCart.length)

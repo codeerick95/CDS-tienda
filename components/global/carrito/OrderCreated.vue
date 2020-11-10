@@ -1,24 +1,18 @@
 <template>
   <section>
-    <div class="container order-created mt-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center bg-light p-3">
-          <h2 class="order-created__subtitle text-danger mb-0">¡Gracias!</h2>
+    <h2 class="order-created__subtitle text-danger mb-0">¡Gracias!</h2>
 
-          <section class="mt-3">
-            <span class="icon text-success order-created__icon">
-            <i class="fas fa-check-circle"></i>
-          </span>
+    <section class="mt-3">
+      <span class="icon text-success order-created__icon">
+      <i class="fas fa-check-circle"></i>
+    </span>
 
-            <h1 class="order-created__title font-weight-bold mt-1">Pedido registrado.</h1>
+      <h1 class="order-created__title font-weight-bold mt-1">Pedido registrado.</h1>
 
-            <p class="mt-3">
-              Puede revisar los detalles del pedido <a href="" @click.prevent="to()">Aquí</a>
-            </p>
-          </section>
-        </div>
-      </div>
-    </div>
+      <p class="mt-3">
+        Puede revisar los detalles del pedido <a href="" @click.prevent="to()">Aquí</a>
+      </p>
+    </section>
 
     <destacados class="mt-5"></destacados>
   </section>

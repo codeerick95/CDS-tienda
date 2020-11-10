@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import {appConfig} from "../../env";
+  import {appConfig} from "@/env";
 
   export default {
     data() {
@@ -36,22 +36,22 @@
     },
     methods: {
       logout() {
-        this.loading = true
+          this.loading = true
 
-        setTimeout(() => {
-          this.$cookies.remove(appConfig.nameToken)
+          this.$apolloHelpers.onLogout()
+              .then(() => {
+                  setTimeout(() => {
+                    this.$cookies.remove(appConfig.userData)
 
-          this.$cookies.remove('k_user_data')
+                    this.$store.commit('setUsuarioLogueado', false)
 
-          this.loading = false
+                    this.loading = false
 
-          this.$router.push('/')
+                    this.$router.push('/')
 
-          // Se recarga la página para poder obtener las cookies
-          setTimeout(() => {
-            this.$store.commit('reloadPage')
-          }, 1000)
-        }, 2000)
+                    this.$bvModal.show('modal-auth')
+                  }, 1500)
+              })
       }
     },
     computed: {

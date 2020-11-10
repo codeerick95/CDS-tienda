@@ -100,6 +100,8 @@
 <script>
 import { appConfig } from '@/env'
 
+import { mapState } from 'vuex'
+
 // Queries
 import GetSlugProtocolos from '@/apollo/queries/protocolos/GetSlugProtocolos'
 import GetAllComentsProtocolo from '@/apollo/queries/comentarios/GetAllComentsProtocolo'
@@ -240,7 +242,7 @@ export default {
           })
       },
       createComment() {
-          if(!this.currentUser) {
+          if(!this.usuarioLogueado) {
             this.$bvModal.show('modal-auth')
             return;
           }
@@ -299,9 +301,7 @@ export default {
         }
     },
     computed: {
-        currentUser: function() {
-            return !!this.$apolloHelpers.getToken()
-        },
+        ...mapState(['usuarioLogueado']),
         protocolo: function() {
             if(this.GetSlugProtocolos) {
                 return this.GetSlugProtocolos

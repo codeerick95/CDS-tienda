@@ -6,10 +6,10 @@
           {{ setTitle }}
         </h3>
 
-        <a href="" class="modal-buttons__link mr-3 font-weight-bold text-right" @click.prevent="$bvModal.hide('modal-auth')" v-if="!mostrarCamposDocumento">
+        <!-- <a href="" class="modal-buttons__link mr-3 font-weight-bold text-right" @click.prevent="$bvModal.hide('modal-auth')" v-if="!mostrarCamposDocumento">
           <i class="fas fa-chevron-left"></i>
           Seguir comprando
-        </a>
+        </a> -->
       </div>
     </template>
 
@@ -85,12 +85,12 @@
                 </button>
               </section>
 
-              <div class="text-center bg-light mt-3">
+              <!-- <div class="text-center bg-light mt-3">
                 <span class="small">Al ingresar o registrarse acepta los</span>
                 <a href="" @click.prevent="aTerminos()" class="d-inline-block">
                   Términos y condiciones
                 </a>
-              </div>
+              </div> -->
             </div>
 
             <div class="card-footer text-center text-dark bg-white">

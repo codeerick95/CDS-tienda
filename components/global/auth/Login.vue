@@ -62,10 +62,14 @@ export default {
 
                             const userData = JSON.stringify(res.data.login)
 
+                            const unaSemana = 60 * 60 * 24 * 7
+
                             // Guarda datos en cookies
                             this.$cookies.set(appConfig.userData, userData, {
-                              maxAge: 60 * 60 * 24 * 7
+                                maxAge: unaSemana
                             })
+
+                            this.$store.commit('setUsuarioLogueado', true)
 
                             // Redirigir según tipo de usuario
                             if(res.data.login.typeUser === 1) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="bg-dark d-flex justify-content-end" v-if="userLogged && userData && userData.typeUser == 1">
+    <section class="bg-dark d-flex justify-content-end" v-if="usuarioLogueado && userData && userData.typeUser == 1">
       <nuxt-link to="/admin/productos" class="btn btn-primary rounded-0">Panel de administración</nuxt-link>
     </section>
 
@@ -21,7 +21,7 @@
     <div class="container-fluid front">
       <div class="row">
         <div class="col-lg-12 px-lg-0">
-
+          
           <Nuxt />
 
         </div>
@@ -29,7 +29,7 @@
 
       <menu-mobile class="d-lg-none"></menu-mobile>
 
-      <div class="cart-btn d-none d-lg-block bg-light shadow" :class="$route.name != 'productos-slug' ? 'cart-btn--medium' : 'cart-btn--top'" v-if="$route.name != 'mi-cuenta' && $route.name != 'pedidos-id'">
+      <div class="cart-btn d-none d-lg-block bg-light shadow" :class="$route.name != 'productos-slug' ? 'cart-btn--medium' : 'cart-btn--top'" v-if="$route.name != 'mi-cuenta' && $route.name != 'pedidos-id' && $route.name != 'carrito' && $route.name != 'finalizar-compra'">
         <div class="d-flex alig-items-center py-3 px-4" @click="mostrarCarrito()">
           <span class="icon d-flex justify-content-center align-items-center pr-3">
             <i class="fas fa-shopping-cart"></i>
@@ -46,7 +46,7 @@
         <div class="text-center py-2 cart-btn__item">
           <a href="" class="text-white d-inline-block w-100" @click.prevent="toAccount()">Mi cuenta</a>
         </div>
-        <div class="text-center py-2 cart-btn__item" v-if="userLogged">
+        <div class="text-center py-2 cart-btn__item" v-if="usuarioLogueado">
           <a href="" class="text-white d-inline-block w-100" @click.prevent="logout()">
             {{ loading ? 'Saliendo...' : 'Salir' }}
             <i class="fas fa-sign-out-alt"></i>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { appConfig } from "../env";
+import { appConfig } from "@/env";
 
 import { mapState } from 'vuex'
 
@@ -94,34 +94,52 @@ export default {
     // this.$cookies.remove(appConfig.nameToken)
     // this.$cookies.remove('k_user_data')
 
-    let cart = localStorage.getItem('kira_cart')
+    let cart = localStorage.getItem(appConfig.carrito)
 
     if(cart) {
       // Realiza el conteo de productos en local storage
-      let nroItems = JSON.parse(localStorage.getItem('kira_cart'))
+      let nroItems = JSON.parse(localStorage.getItem(appConfig.carrito))
       this.$store.commit('setNroItemsCarrito', nroItems.length)
     }
 
-    // Se muestra el modal de login desde iniciar la web
-    if(!this.userLogged) {
-      this.$bvModal.show('modal-auth')
-    }
+    setTimeout(() => {
+      // Se muestra el modal de login desde iniciar la web
+      if(!this.usuarioLogueado) {
+        this.$bvModal.show('modal-auth')
+      }
+    }, 1000)
+
+    this.$nextTick(() => {
+      // Verifica la sesión del usuario
+      let sesion = !!this.$apolloHelpers.getToken()
+
+      this.$store.commit('setUsuarioLogueado', sesion)
+    })
 
   },
   methods: {
     mostrarCarrito() {
       // Abrir modal de carrito
-      this.$store.commit('setModalCarrito', true)
+      this.$router.push('/carrito')
     },
     toAccount() {
         // Si no está logueado
-        if(!this.userLogged) {
+        if(!this.usuarioLogueado) {
 
             this.$bvModal.show('modal-auth')
 
         } else {
 
-            if(!this.userData && this.userLogged) {
+          // Redirigir según el tipo de usuario
+          if(this.userData.typeUser == 1) {
+              this.$router.push('/admin/productos')
+          } else if(this.userData.typeUser == 2){
+              this.$router.push('/mi-cuenta')
+          } else {
+              this.$router.push('/')
+          }
+
+            /* if(!this.userData && this.usuarioLogueado) {
                 this.logout()
             } else {
                 // Redirigir según el tipo de usuario
@@ -132,34 +150,31 @@ export default {
                 } else {
                     this.$router.push('/')
                 }
-            } 
+            }  */
 
         }
     },
     logout() {
-        this.loading = true
+          this.loading = true
 
-        setTimeout(() => {
-            this.$apolloHelpers.onLogout()
-            .then(() => {
-                this.$cookies.remove(appConfig.userData)
+        this.$apolloHelpers.onLogout()
+          .then(() => {
+            setTimeout(() => {
+              this.$cookies.remove(appConfig.userData)
 
-                if(this.$route.path === '/') {
-                    this.$store.commit('reloadPage')
-                } else {
-                    this.$router.push('/')
-                }
+              this.$store.commit('setUsuarioLogueado', false)
 
-                this.loading = false
-            })
-        }, 1000)
+              this.loading = false
+
+              this.$router.push('/')
+
+              this.$bvModal.show('modal-auth')
+            }, 1500)
+        })
     }
   },
   computed: {
-    ...mapState(['modalCarrito', 'nroItemsCarrito', 'showCategoriesMobile']),
-    userLogged: function () {
-      return !!this.$apolloHelpers.getToken()
-    },
+    ...mapState(['modalCarrito', 'nroItemsCarrito', 'showCategoriesMobile', 'usuarioLogueado']),
     userData: function () {
       if(this.$cookies.get(appConfig.userData)) {
         return this.$cookies.get(appConfig.userData)
