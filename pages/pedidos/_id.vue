@@ -122,10 +122,10 @@
 
                         <p class="d-flex flex-column flex-md-row align-items-center border-bottom">
                           <span class="text-muted mr-2">Tipo de pago:</span>
-                          <span>{{ info2.data2.TipoPago == 1 ? 'Tranferencia' : 'Efectivo móvil' }}</span>
+                          <span>{{ setTipoPago(info2.data2.TipoPago) }}</span>
                         </p>
 
-                        <p class="d-flex flex-column flex-md-row align-items-center border-bottom">
+                        <p class="d-flex flex-column flex-md-row align-items-center border-bottom" v-if="info2.data2.banco">
                           <span class="text-muted mr-2">Medio de pago:</span>
                           <span>{{ info2.data2.banco }}</span>
                         </p>
@@ -143,7 +143,7 @@
 
                           <p class="d-flex flex-column flex-md-row align-items-center border-bottom">
                             <span class="text-muted mr-2">Número de contacto:</span>
-                            <span>{{ info2.data.celular }}</span>
+                            <span>{{ info2.data.celular || 'No especificado' }}</span>
                           </p>
 
                           <p class="d-flex flex-column flex-md-row align-items-center border-bottom" v-if="tipoUsuario == 1">
@@ -151,7 +151,7 @@
                             <span>{{ info2.data3.email }}</span>
                           </p>
 
-                          <section>
+                          <section v-if="info2.data2.voucher">
                             <p class="d-flex flex-column flex-md-row align-items-center border-bottom">
                               <span class="text-muted mr-2">Voucher:</span>
 
@@ -400,6 +400,20 @@
 
           this.loadingUpload = false
         })
+      },
+      setTipoPago(value) {
+        let text = '',
+        p = parseInt(value)
+
+        if(p === 1) {
+          text = 'Transferencia bancaria'
+        } else if(p === 2) {
+          text = 'Efectivo móvil'
+        } else if(p === 3) {
+          text = 'Culqi - Tarjeta Débito/Crédito'
+        }
+
+        return text
       }
     },
     computed: {

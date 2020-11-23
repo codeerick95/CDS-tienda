@@ -50,7 +50,7 @@
                       </td>
 
                       <td>
-                        <span>S/{{ parseFloat(order.precioTotal) }}</span>
+                        <span>S/{{ parsearPrecio(order.precioTotal) }}</span>
                       </td>
 
                       <td>
@@ -258,7 +258,20 @@
 
           this.loading = false
         })
-      }
+      },
+      parsearPrecio(n) {
+       if(n) {
+          // Esta función agrega comas y puntos al total
+          n = n.toString()
+          while (true) {
+          var n2 = n.replace(/(\d)(\d{3})($|,|\.)/g, '$1,$2$3')
+          if (n == n2) break
+          n = n2
+          }
+
+          return parseFloat(n).toFixed(2)
+       }
+    },
     },
     computed: {
     }

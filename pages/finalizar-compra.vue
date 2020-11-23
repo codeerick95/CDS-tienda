@@ -1,7 +1,7 @@
 <template>
   <div class="container finalize pt-5">
     <template v-if="!ordenProcesada">
-      <div class="row" v-if="products.length >=1">
+      <div class="row" v-if="products.length >= 1">
         <div class="col-md-7">
           <h1 class="medium-text font-weight-bold text-uppercase">
             Finalizar compra
@@ -600,49 +600,53 @@
           </template>
         </div>
 
-        <div class="col-md-5 border-left">
-          <section class="mt-4 pt-3 border-top">
-            <p class="d-flex justify-content-between mt-0 mb-2">
-              <span class="text-muted">Subtotal</span>
+        <div class="col-md-5">
+          <div class="card border-0 shadow-card">
+            <div class="card-body">
+              <section>
+                <p class="d-flex justify-content-between mt-0 mb-2">
+                  <span class="text-muted">Subtotal</span>
 
-              <span class="font-weight-bold">S/{{ setSubTotal }}</span>
-            </p>
+                  <span class="font-weight-bold">S/ {{ setSubTotal }}</span>
+                </p>
 
-            <p
-              class="d-flex justify-content-between mt-0"
-              v-if="tipoEnvioSeleccionado"
-            >
-              <span class="text-muted">Costo de envío</span>
+                <p
+                  class="d-flex justify-content-between mt-0"
+                  v-if="tipoEnvioSeleccionado"
+                >
+                  <span class="text-muted">Costo de envío</span>
 
-              <span class="font-weight-bold"
-                >S/{{ parsearPrecio(tipoEnvioSeleccionado.price) }}</span
-              >
-            </p>
-          </section>
+                  <span class="font-weight-bold"
+                    >S/ {{ parsearPrecio(tipoEnvioSeleccionado.price) }}</span
+                  >
+                </p>
+              </section>
 
-          <section class="mt-4 pt-3 border-top">
-            <p class="d-flex justify-content-between">
-              <span class="text-muted">Total</span>
+              <section class="mt-4 pt-3 border-top">
+                <p class="d-flex justify-content-between">
+                  <span class="text-muted">Total</span>
 
-              <span class="font-weight-bold">S/{{ setTotal }}</span>
-            </p>
-          </section>
+                  <span class="font-weight-bold">S/ {{ setTotal }}</span>
+                </p>
+              </section>
 
-          <section class="text-center">
-            <p class="small text-danger" v-if="error">
-              Ocurrió un error, por favor inténtelo nuevamente.
-            </p>
+              <section class="text-center">
+                <p class="small text-danger" v-if="error">
+                  Ocurrió un error, por favor inténtelo nuevamente.
+                </p>
 
-            <button
-              type="button"
-              class="btn btn-outline-primary btn-block"
-              @click="mostrarModalFinalizarPago()"
-              v-if="usuarioLogueado"
-              :disabled="!validate"
-            >
-              {{ loading ? "Creando pedido" : "FINALIZAR COMPRA" }}
-            </button>
-          </section>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-block"
+                  @click="mostrarModalFinalizarPago()"
+                  v-if="usuarioLogueado"
+                  :disabled="!validate"
+                >
+                  {{ loading ? "Creando pedido" : "FINALIZAR COMPRA" }}
+                </button>
+              </section>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -797,7 +801,7 @@ export default {
       loading: false,
       ordenProcesada: false,
       error: false,
-      voucher: null
+      voucher: null,
     };
   },
   mounted() {
@@ -819,7 +823,7 @@ export default {
   },
   components: {
     ModalFinalizarPago,
-    OrderCreated
+    OrderCreated,
   },
   methods: {
     mostrarModalLogin() {
@@ -830,7 +834,7 @@ export default {
     createCulqiToken() {
       return new Promise((resolve) => {
         Culqi.createToken();
-        console.log('token')
+
         /* REVISA QUE ESTÁ DISPONIBLE EL TOKEN Y RESUELVE LA PROMESA */
         let c = 0;
 
@@ -841,8 +845,6 @@ export default {
 
           if (Culqi.token) {
             clearInterval(checkToken);
-
-            console.log('e')
 
             resolve(Culqi.token.id);
           }
@@ -1051,9 +1053,9 @@ export default {
       }
     },
     asignarVoucherParaPedido(voucher) {
-      this.voucher = voucher
+      this.voucher = voucher;
 
-      this.crearPedido()
+      this.crearPedido();
     },
     crearPedido() {
       this.loading = true;
@@ -1061,148 +1063,139 @@ export default {
       this.ordenProcesada = false;
       this.error = false;
 
-      let culqi = 3
+      let culqi = 3;
 
-      if(this.tipoPagoSeleccionado === culqi) {
-        this.createCulqiToken()
-        .then((token) => {
-          this.enviarMutation()
+      if (this.tipoPagoSeleccionado === culqi) {
+        this.createCulqiToken().then((token) => {
+          this.enviarMutation(token);
         });
       } else {
-        this.enviarMutation()
+        this.enviarMutation();
       }
     },
-    enviarMutation() {
+    enviarMutation(token) {
       let fechaPedido = new Date();
-        fechaPedido = this.$moment(fechaPedido).format("YYYY-MM-DD");
+      fechaPedido = this.$moment(fechaPedido).format("YYYY-MM-DD");
 
-        let input1 = {
-          fechaPedido: fechaPedido,
-          EstadoPedido: 1,
-          TipoPago: this.tipoPagoSeleccionado,
-          banco: "",
-          nroOperacion: "",
-          TipoEnvio: this.tipoEnvioSeleccionado.id,
-          costoEnvio:
-            this.tipoEnvioSeleccionado.id === 1
-              ? this.tipoEnvioSeleccionado.price
-              : "",
+      let input1 = {
+        fechaPedido: fechaPedido,
+        EstadoPedido: 1,
+        TipoPago: this.tipoPagoSeleccionado,
+        banco: "",
+        nroOperacion: "",
+        TipoEnvio: this.tipoEnvioSeleccionado.id,
+        costoEnvio:
+          this.tipoEnvioSeleccionado.id === 1
+            ? this.tipoEnvioSeleccionado.price
+            : "",
+      };
+
+      // Asignar nombre de banco
+      if (this.tipoPagoSeleccionado != 3) {
+        input1.banco = this.dataEfectivoSeleccionado
+          ? this.dataEfectivoSeleccionado.titulo
+          : this.dataBancoSeleccionado.titulo;
+      }
+
+      let input2 = [];
+
+      let productsForMutation = [];
+
+      // Iterar sobre los productos del carrito para darle formato para la mutation
+
+      this.products.forEach((item) => {
+        let i = {
+          cantidad: parseInt(item.quantity),
+          precio: item.price,
+          producto_id: parseInt(item.id),
         };
 
-        // Asignar nombre de banco
-        if (this.tipoPagoSeleccionado != 3) {
-          input1.banco = this.dataEfectivoSeleccionado
-            ? this.dataEfectivoSeleccionado.titulo
-            : this.dataBancoSeleccionado.titulo;
+        productsForMutation.push(i);
+      });
+
+      input2 = productsForMutation;
+
+      let input3 = {
+        ruc: this.facturacion ? this.ruc : "",
+        razon_social: this.facturacion ? this.razon_social : "",
+      };
+
+      let input4;
+
+      if (this.tipoEnvioSeleccionado.id == 1) {
+        // Envío express
+        input4 = {
+          celularEnvio: this.phone,
+          DeparCodiEnvio: 15,
+          ProvCodiEnvio: 128,
+          DistCodiEnvio: parseInt(this.districtLima),
+          direccionEnvio: this.addressLima,
+        };
+      } else if (this.tipoEnvioSeleccionado.id == 2) {
+        // Provincias
+        input4 = {
+          celularEnvio: this.phone,
+          DeparCodiEnvio: parseInt(this.departamentProv),
+          ProvCodiEnvio: parseInt(this.provinceProv),
+          DistCodiEnvio: parseInt(this.districtProv),
+          direccionEnvio: `${this.nameAgency} ${this.addressAgency}`,
+        };
+      } else if (this.tipoEnvioSeleccionado.id == 3) {
+        // Estaciones
+
+        input4 = {
+          celularEnvio: this.phone,
+          DeparCodiEnvio: 15,
+          ProvCodiEnvio: 128,
+          DistCodiEnvio: 1254,
+          direccionEnvio: "",
+        };
+
+        if (this.envioGratuito == "metro") {
+          input4.direccionEnvio = `${this.estacionMetro} - Linea 1`;
+        } else if (this.envioGratuito == "metropolitano") {
+          input4.direccionEnvio = `${this.estacionMetropolitano} - Metropolitano`;
         }
+      }
 
-        let input2 = [];
+      let input5;
 
-        let productsForMutation = [];
+      if (this.tipoPagoSeleccionado === 3) {
+        input5 = {
+          emailTargeta: this.culqi.email,
+          first_name: this.culqi.first_name,
+          last_name: this.culqi.last_name,
+          source_id: token,
+        };
+      }
 
-        // Iterar sobre los productos del carrito para darle formato para la mutation
+      this.$apollo
+        .mutate({
+          mutation: CreatePedido,
+          variables: {
+            input1,
+            input2,
+            input3,
+            input4,
+            input5,
+          },
+        })
+        .then((response) => {
+          // Eliminar carrito
+          localStorage.removeItem(appConfig.carrito);
 
-        this.products.forEach((item) => {
-          let i = {
-            cantidad: parseInt(item.quantity),
-            precio: item.price,
-            producto_id: parseInt(item.id),
-          };
+          this.products = [];
 
-          productsForMutation.push(i);
+          this.loading = false;
+
+          this.$store.commit("setNroItemsCarrito", 0);
+
+          this.ordenProcesada = true;
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.error = true;
         });
-
-        input2 = productsForMutation;
-
-        let input3 = {
-          ruc: this.facturacion ? this.ruc : "",
-          razon_social: this.facturacion ? this.razon_social : "",
-        };
-
-        let input4;
-
-        if (this.tipoEnvioSeleccionado.id == 1) {
-          // Envío express
-          input4 = {
-            celularEnvio: this.phone,
-            DeparCodiEnvio: 15,
-            ProvCodiEnvio: 128,
-            DistCodiEnvio: parseInt(this.districtLima),
-            direccionEnvio: this.addressLima,
-          };
-        } else if (this.tipoEnvioSeleccionado.id == 2) {
-          // Provincias
-          input4 = {
-            celularEnvio: this.phone,
-            DeparCodiEnvio: parseInt(this.departamentProv),
-            ProvCodiEnvio: parseInt(this.provinceProv),
-            DistCodiEnvio: parseInt(this.districtProv),
-            direccionEnvio: `${this.nameAgency} ${this.addressAgency}`,
-          };
-        } else if (this.tipoEnvioSeleccionado.id == 3) {
-          // Estaciones
-
-          input4 = {
-            celularEnvio: this.phone,
-            DeparCodiEnvio: 15,
-            ProvCodiEnvio: 128,
-            DistCodiEnvio: 1254,
-            direccionEnvio: "",
-          };
-
-          if (this.envioGratuito == "metro") {
-            input4.direccionEnvio = `${this.estacionMetro} - Linea 1`;
-          } else if (this.envioGratuito == "metropolitano") {
-            input4.direccionEnvio = `${this.estacionMetropolitano} - Metropolitano`;
-          }
-        }
-
-        let input5;
-
-        if (this.tipoPagoSeleccionado === 3) {
-          input5 = {
-            emailTargeta: this.culqi.email,
-            first_name: this.culqi.first_name,
-            last_name: this.culqi.last_name,
-            source_id: token,
-          };
-        }
-
-        console.log(input1);
-        console.log(input2);
-        console.log(input3);
-        console.log(input4);
-        console.log(input5);
-
-        this.$apollo
-          .mutate({
-            mutation: CreatePedido,
-            variables: {
-              input1,
-              input2,
-              input3,
-              input4,
-              input5,
-            },
-          })
-          .then((response) => {
-            console.log(response);
-
-            // Eliminar carrito
-            localStorage.removeItem(appConfig.carrito);
-
-            this.products = [];
-
-            this.loading = false;
-
-            this.ordenProcesada = true;
-          })
-          .catch((error) => {
-            console.log(error);
-
-            this.loading = false;
-            this.error = true;
-          });
     },
     modalCerrado() {
       this.efectivoSeleccionado = null;
@@ -1210,7 +1203,7 @@ export default {
 
       this.dataEfectivoSeleccionado = null;
       this.dataBancoSeleccionado = null;
-    }
+    },
   },
   computed: {
     setSubTotal: function () {
@@ -1233,46 +1226,36 @@ export default {
     validate: function () {
       let status = false;
 
-      if(this.tipoEnvioSeleccionado) {
+      if (this.tipoEnvioSeleccionado) {
+        let culqi = 3;
 
-        let culqi = 3
-
-        if(this.tipoPagoSeleccionado === culqi ) {
-
+        if (this.tipoPagoSeleccionado === culqi) {
           if (this.tipoEnvioSeleccionado.id == 1) {
-
             if (this.validarEnvioLima && this.validarCulqi) {
               status = true;
             }
-
           } else if (this.tipoEnvioSeleccionado.id == 2) {
-
             if (this.validarEnvioProvincia && this.validarCulqi) {
               status = true;
             }
-
           } else if (this.tipoEnvioSeleccionado.id == 3) {
-
             if (this.validarEnvioGratuito && this.validarCulqi) {
               status = true;
             }
-
           }
-
         } else {
-
           let efectivo = 2,
-            transferencia = 1
+            transferencia = 1;
 
-          if(this.tipoPagoSeleccionado === transferencia) {
-            if(this.bancoSeleccionado) {
-              status = true
+          if (this.tipoPagoSeleccionado === transferencia) {
+            if (this.bancoSeleccionado) {
+              status = true;
             }
           }
 
-          if(this.tipoPagoSeleccionado === efectivo) {
-            if(this.efectivoSeleccionado) {
-              status = true
+          if (this.tipoPagoSeleccionado === efectivo) {
+            if (this.efectivoSeleccionado) {
+              status = true;
             }
           }
         }
@@ -1346,7 +1329,7 @@ export default {
       }
 
       return status;
-    }
+    },
   },
 };
 </script>

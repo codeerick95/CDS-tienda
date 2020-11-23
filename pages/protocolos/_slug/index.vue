@@ -271,6 +271,7 @@ export default {
         .catch(() => this.loading = false)
       },
         setVideo(item) {
+
             if(item) {
                 let video
 

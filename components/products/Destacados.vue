@@ -13,7 +13,7 @@
     </div>
 
     <div class="row mt-5">
-      <div class="col-md-12 text-center">
+      <div class="col-md-12 text-center mt-5">
         <a href="" class="btn btn-danger rounded-0" @click.prevent="to()">Ver todos</a>
       </div>
     </div>

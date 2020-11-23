@@ -133,7 +133,7 @@
           this.$store.commit('setNroItemsCarrito', oldCart.length)
 
           // Abrir modal de carrito
-          this.$store.commit('setModalCarrito', true)
+          // this.$store.commit('setModalCarrito', true)
 
           this.$toast.success('Producto añadido.', {
             duration : 3000

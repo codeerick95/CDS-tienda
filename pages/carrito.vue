@@ -5,30 +5,30 @@
       v-if="products.length >= 1 && currentSlide != 6"
     >
       <div class="row">
-        <div class="col-lg-9 px-0 px-lg-2">
+        <div class="col-lg-9 px-0 px-lg-2 overflow-hidden">
           <div class="card bg-light border-0">
               <div class="card-body">
                   
                   <span class="small">PRODUCTOS</span>
 
-                  <article class="carrito__card mt-3 mb-5" v-for="product in products" :key="product.id">
+                  <article class="carrito__card mt-3 mb-5" v-for="(product, index) in products" :key="product.id" :class="{'animated fadeOutRight': itemRemove.id === product.id}">
                       <div class="row">
                           <div class="col-3">
                               <img :src="product.image" :alt="product.name" class="img-fluid" v-if="product.image">
                           </div>
                           <div class="col-9">
-                              <div class="card">
+                              <div class="card border-0 shadow-card">
                                 <div class="card-body">
-                                  <nuxt-link :to="{name: 'productos-slug', params: {slug: product.slug}}" class="small text-dark font-weight-bold">{{ product.name }}</nuxt-link>
+                                <nuxt-link :to="{name: 'productos-slug', params: {slug: product.slug}}" class="small text-dark font-weight-bold">{{ product.name }}</nuxt-link>
 
                               <span class="small font-weight-bold d-block mt-3">S/ {{ parsearPrecio(product.price) }}</span>
 
                               <!-- <span class="small font-weight-bold d-block mt-3">Cantidad: {{ product.quantity }}</span> -->
 
-                              <div class="mt-3">
-                                <p class="small">Cantidad</p>
-                                
+                              <div class="mt-3 d-flex justify-content-between align-items-center">
                                 <counter :quantity="product.quantity" :producto="product" @cambioEnCantidad="cambioEnCantidad()"></counter>
+
+                                <button type="button" class="btn btn-outline-danger btn-sm" @click="removerProducto(product, index)">Eliminar</button>
                               </div>
 
                               <!-- <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
@@ -118,6 +118,9 @@ export default {
       page: 1,
       typeShipping: {},
       loading: false,
+      itemRemove: {
+        id: null
+      }
     };
   },
   mounted() {
@@ -144,15 +147,17 @@ export default {
       }
     },
     parsearPrecio(n) {
-        // Esta función agrega comas y puntos al total
-        n = n.toString()
-        while (true) {
-        var n2 = n.replace(/(\d)(\d{3})($|,|\.)/g, '$1,$2$3')
-        if (n == n2) break
-        n = n2
-        }
+       if(n) {
+          // Esta función agrega comas y puntos al total
+          n = n.toString()
+          while (true) {
+          var n2 = n.replace(/(\d)(\d{3})($|,|\.)/g, '$1,$2$3')
+          if (n == n2) break
+          n = n2
+          }
 
-        return parseFloat(n).toFixed(2)
+          return parseFloat(n).toFixed(2)
+       }
     },
     selectTypeShipping(data) {
       // Si seleccionó el tipo de envío se cambia el slide a direcciones
@@ -217,6 +222,21 @@ export default {
     },
     cambioEnCantidad() {
       this.getProductos()
+    },
+    removerProducto(item, index) {
+      this.itemRemove = item
+
+      // Elimina el producto del array
+      setTimeout(() => {
+        this.products.splice(index, 1)
+
+        // Guarda el nuevo array después de haber eliminado el elemento
+        localStorage.setItem(appConfig.carrito, JSON.stringify(this.products));
+
+        this.getProductos();
+
+        this.$store.commit("setNroItemsCarrito", this.products.length);
+      }, 500)
     }
   },
   computed: {

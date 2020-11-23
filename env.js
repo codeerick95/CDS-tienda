@@ -4,7 +4,7 @@ export const appConfig = {
     logo: 'https://imagenes.softaki.com/app/MMS/MMS-Logo-Fb.webp',
     logoEstatico: '/logo-mms-peru.png',
     nameToken: 'mmstoken',
-    graphUrl: 'https://logica.cdstienda.com/public/graphql',
+    graphUrl: 'https://protocolos.softaki.com/public/graphql',
     culqi: 'pk_test_loDle17LkXW8LBj3',
     facebookAppId: '2809328502635267',	
     googleClientId: '52480402180-faa4fghdlqqfu7qjkui38s65enqiv8c8.apps.googleusercontent.com',
