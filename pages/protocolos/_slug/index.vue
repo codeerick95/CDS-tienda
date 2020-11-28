@@ -7,12 +7,12 @@
                     <h2 class="protocolo__title font-weight-bold">{{ protocolo.titulo }}</h2>
 
                     <section class="d-flex justify-content-between align-items-center">
-                        <p class="mt-0">
+                        <p class="mt-0 small">
                             Por
                             <span class="text-danger">Admin</span>
                         </p>
 
-                        <p class="mt-0 text-muted">
+                        <p class="mt-0 small text-muted">
                             <i class="far fa-calendar-alt"></i>
                             {{ $moment(protocolo.created_at).format('YYYY-MM-DD') }}
                         </p>
@@ -51,7 +51,7 @@
 
                                         <p class="my-0 text-muted">
                                             <i class="far fa-calendar-alt"></i>
-                                            {{ $moment(item.created_at).format('YYYY-MM-DD') }}
+                                            {{ $moment(item.created_at).format('DD-MM-YYYY') }}
                                         </p>
                                     </div>
 

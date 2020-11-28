@@ -7,9 +7,5 @@ export default ({app, redirect}) => {
   
   if (!hasToken || data.typeUser != 1) {
     redirect('/')
-    /* error({
-      errorCode:503,
-      message:'You are not allowed to see this'
-    }) */
   }
 }

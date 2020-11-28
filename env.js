@@ -4,10 +4,11 @@ export const appConfig = {
     logo: 'https://imagenes.softaki.com/app/MMS/MMS-Logo-Fb.webp',
     logoEstatico: '/logo-mms-peru.png',
     nameToken: 'mmstoken',
-    graphUrl: 'https://protocolos.softaki.com/public/graphql',
+    graphUrl: 'https://logica.cdstienda.com/public/graphql',
     culqi: 'pk_test_loDle17LkXW8LBj3',
-    facebookAppId: '2809328502635267',	
+    facebookAppId: '2809328502635267',
     googleClientId: '52480402180-faa4fghdlqqfu7qjkui38s65enqiv8c8.apps.googleusercontent.com',
+    // googleClientId: '381322008863-6shi53nd0lrn862vr319kqle7t8t06nd.apps.googleusercontent.com',
     redesSociales: {
       facebook: 'https://www.facebook.com/BioySaludMedicinaAlternativa',
       whatsapp: 'https://api.whatsapp.com/send?phone=51987648630&text=Buen%20d%C3%ADa!%20Requiero%20mas%20informaci%C3%B3n'

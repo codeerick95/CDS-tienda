@@ -11,8 +11,8 @@ query GetAllTestimonios($number_paginate:Int,$page:Int){
         typeDocument
         numberDocument
         name
-        fatherSurname
-        motherSurname
+        surnames
+        fecha_nacimiento
         photo
         url
         email

@@ -5,9 +5,9 @@ mutation login($input: loginInput!){
   	typeDocument
   	numberDocument
   	name
-  	fatherSurname
-  	motherSurname
+  	surnames
     email
+    photo
     api_token
  }
 }

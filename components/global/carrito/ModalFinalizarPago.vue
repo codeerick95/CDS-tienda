@@ -62,10 +62,12 @@
         <template v-if="seccionActual === 'subir-voucher'">
             <section>
                 <div class="text-center px-3">
-                    <p class="small font-weight-bold my-0">
-                        Confirme su pago enviando la captura de pantalla de la constancia.
+                    <p class="text-muted small">
+                        En este momento puede realizar el pago y adjuntar el
+                        comprobante para asegurar la reserva de su pedido o si
+                        prefiere puede
+                        <span class="text-success">adjuntarlo después</span>.
                     </p>
-                    <p class="small font-weight-bold mt-1 mb-0">Si no coincide, se cancelará.</p>
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center mt-3" v-if="previewImage">
@@ -83,7 +85,7 @@
                 </div>
 
                 <div class="d-flex flex-column justify-content-center align-items-center mt-3">
-                    <button type="button" class="btn btn-primary" :disabled="!voucher" @click="finalizarPago()">FINALIZAR COMPRA</button>
+                    <button type="button" class="btn btn-primary" @click="finalizarPago()">FINALIZAR COMPRA</button>
 
                     <a href="" class="d-inline-block mt-3" @click.prevent="seccionActual = 'info'">VOLVER</a>
                 </div>

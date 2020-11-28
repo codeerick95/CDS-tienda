@@ -2,11 +2,12 @@
 <template>
   <article class="card product bg-white animated fadeIn border-0" v-if="product">
 
-    <div class="card__header position-relative overflow-hidden">
-      <img :src="product.foto_real.url" :alt="product.nombre" class="product__image" @click.prevent="to()">
+    <div class="overflow-hidden">
+      <div class="product__image position-relative overflow-hidden bg-warning" v-bind:style="{backgroundImage: 'url(' + product.foto_real.url + ')'}" v-if="product.foto_real" @click.prevent="to()">
+      </div>
     </div>
 
-    <div class="card-body bg-light border-0 px-2 pt-3 pb-1 text-left d-flex flex-column justify-content-between position-relative">
+    <div class="card-body border-0 px-2 py-3 pb-1 text-left d-flex flex-column justify-content-between position-relative">
         <div>
           <h3 class="product__price product__price--discount bg-danger text-white my-0 mr-2 py-1 px-2" v-if="product.precio_descuento">S/ {{ humanizeNumber(parseFloat(product.precio_descuento).toFixed(2)) }}</h3>
 
@@ -189,13 +190,16 @@
     width: 100%;
     height: 100%;
 
+    background-size: cover;
+    background-position: center;
+
     transition: transform .5s;
 
     filter: grayscale(.2);
 
     @media (min-width: 768px) {
       width: 100%;
-      min-height: 12vw;
+      height: 12vw;
     }
   }
 

@@ -12,9 +12,9 @@
       <section class="container mt-3">
         <div class="row">
           <div class="col-md-12">
-            <div class="card">
+            <div class="card border-0">
               <div class="card-body">
-                <h3 class="lead font-weight-bold">Mis pedidos</h3>
+                <h3 class="lead mb-3">Mis pedidos</h3>
 
                 <p class="lead" v-if="loading">Cargando...</p>
 
@@ -36,7 +36,7 @@
 
                       <td>
                         <p class="d-flex flex-column">
-                          <span class="font-weight-bold">{{ setState(order.EstadoPedido) }}</span>
+                          <span class="small font-weight-bold">{{ setState(order.EstadoPedido) }}</span>
                           <a href="" @click.prevent="cambiarEstado(order)">Cambiar</a>
                         </p>
                       </td>

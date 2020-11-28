@@ -11,6 +11,7 @@ export const state = () => ({
   voucher: null, // Voucher subido por el usuario
   habilitarBotonFinalizarCompra: false,
   usuarioLogueado: false, // Como utiliddad ya que en aalgunos componentes no se actualizan las cookies al inciar sesión
+  datosUsuarioLogueado: null
 })
 
 export const mutations = {
@@ -38,5 +39,8 @@ export const mutations = {
   },
   setUsuarioLogueado(state, value) {
     state.usuarioLogueado = value
-  }
+  },
+  setDatosUsuarioLogueado(state, value) {
+    state.datosUsuarioLogueado = value
+}
 }

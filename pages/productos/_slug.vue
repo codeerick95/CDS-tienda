@@ -32,9 +32,9 @@
               </nuxt-link>
             </div>
 
-            <h1 class="mt-3 font-weight-bold">{{ product.nombre }}</h1>
+            <h1 class="lead font-weight-bold mt-3">{{ product.nombre }}</h1>
 
-            <p>{{ product.descripcionCorta }}</p>
+            <p class="small text-muted">{{ product.descripcionCorta }}</p>
 
             <div class="stars">
               <span class="icon text-warning mr-1" v-for="i in 5">
@@ -42,12 +42,12 @@
               </span>
             </div>
 
-            <div class="product-slug__details mt-5">
+            <div class="product-slug__details">
 
               <template v-if="product.precio_descuento">
-                <div class="row">
-                  <div class="col-4">
-                    <span>Antes</span>
+                <div class="row mt-3">
+                  <div class="col-3">
+                    <span class="text-muted small">Antes</span>
                   </div>
                   <div class="col-8">
                     <span class="line-through">S/ {{ product.precio_real }}</span>
@@ -55,11 +55,11 @@
                 </div>
 
                 <div class="row mt-3">
-                  <div class="col-4">
-                    <span>Ahora</span>
+                  <div class="col-3">
+                    <span class="text-muted small">Ahora</span>
                   </div>
                   <div class="col-8">
-                    <h3>S/ {{ product.precio_descuento }}</h3>
+                    <h3 class="lead">S/ {{ product.precio_descuento }}</h3>
                   </div>
                 </div>
               </template>
@@ -76,9 +76,9 @@
               </div>
 
               <section class="mt-3">
-                <div class="card bg-light">
-                  <div class="card-body">
-                    <span class="font-weight-bold">Descripción:</span>
+                <div class="card bg-light border-0">
+                  <div class="card-body px-2">
+                    <span class="small text-muted">Descripción:</span>
 
                     <p class="medium-text">
                       {{ product.descripcionLarga }}

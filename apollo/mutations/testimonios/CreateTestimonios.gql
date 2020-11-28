@@ -9,8 +9,7 @@ mutation CreateTestimonios($input:TestimoniosInput){
       typeDocument
       numberDocument
       name
-      fatherSurname
-      motherSurname
+      surnames
       photo
       url
       email

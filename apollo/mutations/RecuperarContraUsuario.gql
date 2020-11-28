@@ -1,15 +1,13 @@
-mutation CrearUsuario($input:UserInput!,$photo:Upload){
-  CrearUsuario(input:$input,photo:$photo) {
+mutation RecuperarContraUsuario($input:UserInput!){
+  RecuperarContraUsuario(input:$input) {
     id
     typeUser
-    tipoInicio
     typeDocument
     numberDocument
     name
     surnames
     fecha_nacimiento
     url
-    urlPhoto
     photo
     email
     api_token

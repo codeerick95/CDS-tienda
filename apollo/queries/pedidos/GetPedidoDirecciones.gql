@@ -28,8 +28,7 @@ query GetPedidoDirecciones($id_pedido:Int){
 
     data3 {
       name
-      fatherSurname
-      motherSurname
+      surnames
       email
     }
 

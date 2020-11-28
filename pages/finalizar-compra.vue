@@ -17,7 +17,7 @@
           </div>
 
           <template v-else>
-            <div class="row mt-3">
+            <div class="row" v-if="seccionActual === 'envio'">
               <div class="col-12 mb-3">
                 <h3 class="small text-muted my-0 pt-3 border-top">
                   Seleccione método de envío
@@ -55,8 +55,8 @@
               </div>
             </div>
 
-            <div class="row mt-4">
-              <!-- Direcciones -->
+            <!-- Direcciones -->
+            <div class="row mt-4" v-if="seccionActual === 'direcciones'">
               <section
                 class="col-12"
                 id="direcciones"
@@ -67,8 +67,8 @@
                 </h3>
 
                 <!-- Lima -->
-                <div v-if="tipoEnvioSeleccionado.id == 1">
-                  <div class="bg-light p-3">
+                <div class="mt-3" v-if="tipoEnvioSeleccionado.id == 1">
+                  <div class="bg-light">
                     <p>
                       Departamento:
                       <span class="font-weight-bold">Lima</span>
@@ -113,7 +113,7 @@
 
                 <!-- Provincias -->
                 <div v-if="tipoEnvioSeleccionado.id == 2">
-                  <div class="bg-light p-3">
+                  <div class="bg-light">
                     <div class="row">
                       <div class="col-lg-4">
                         <div class="form-group">
@@ -207,7 +207,7 @@
 
                 <!-- Gratuito -->
                 <div v-if="tipoEnvioSeleccionado.id == 3">
-                  <div class="bg-light p-3">
+                  <div class="bg-light">
                     <div class="row">
                       <div class="col-md-12">
                         <b-form-group label="Enviar a:">
@@ -266,17 +266,21 @@
                   </div>
                 </div>
 
-                <div class="form-group mt-3">
-                  <label for="phone">Número de contacto</label>
-                  <input
-                    type="text"
-                    id="phone"
-                    class="form-control"
-                    autocomplete="off"
-                    maxlength="9"
-                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    v-model="phone"
-                  />
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group mt-3">
+                      <label for="phone">Número de contacto</label>
+                      <input
+                        type="text"
+                        id="phone"
+                        class="form-control"
+                        autocomplete="off"
+                        maxlength="9"
+                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        v-model="phone"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <section class="col-md-12">
@@ -331,7 +335,7 @@
             </div>
 
             <!-- Tipos de pago -->
-            <div class="row mt-3">
+            <div class="row mt-3" v-if="seccionActual === 'pago'">
               <div class="col-md-12">
                 <h3 class="small text-muted my-0 pt-3 border-top">Pagar con</h3>
 
@@ -451,10 +455,11 @@
                           <input
                             type="text"
                             size="20"
-                            placeholder="Número de tarjeta"
+                            placeholder="**** **** **** ****"
                             data-culqi="card[number]"
                             id="card[number]"
                             class="form-control"
+                            @keypress="asignarEspacioParaNumeroTarjeta($event)"
                             v-model="culqi.nroTarjeta"
                           />
                         </div>
@@ -477,12 +482,14 @@
                                 data-culqi="card[cvv]"
                                 id="card[cvv]"
                                 class="form-control"
+                                maxlength="4"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 v-model="culqi.cvv"
                               />
                             </div>
                           </div>
 
-                          <div class="col-8">
+                          <div class="col-8 col-lg-5">
                             <div class="input-group mb-3 w-100 flex-nowrap">
                               <div class="input-group-prepend">
                                 <span
@@ -490,6 +497,8 @@
                                   id="basic-addon2"
                                 >
                                   <i class="far fa-calendar-alt"></i>
+
+                                  <!-- <span class="d-linline-block ml-2">(MM/YYYY)</span> -->
                                 </span>
                               </div>
                               <div class="fecha-container">
@@ -501,20 +510,24 @@
                                   id="card[exp_month]"
                                   placeholder="Mes expiración"
                                   class="form-control form-control--1"
+                                  maxlength="2"
+                                  oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                   v-model="culqi.mes"
                                 />
+
                                 <span
                                   class="mx-1 d-flex justify-content-center align-items-center"
                                   >/</span
                                 >
+
                                 <input
-                                  type="number"
-                                  min="0"
-                                  size="4"
+                                  type="text"
                                   data-culqi="card[exp_year]"
                                   id="card[exp_year]"
                                   placeholder="Año expiración"
                                   class="form-control form-control--2"
+                                  maxlength="2"
+                                  oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                   v-model="culqi.year"
                                 />
                               </div>
@@ -597,6 +610,53 @@
                 </div>
               </div>
             </div>
+
+            <section class="mt-4">
+              <template v-if="seccionActual === 'envio'">
+                <div class="d-flex justify-content-end">
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    :disabled="!tipoEnvioSeleccionado"
+                    @click="seccionActual = 'direcciones'"
+                  >
+                    Siguiente
+                  </button>
+                </div>
+              </template>
+
+              <template v-if="seccionActual === 'direcciones'">
+                <div class="d-flex justify-content-between">
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    @click="seccionActual = 'envio'"
+                  >
+                    Regresar
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    :disabled="!validarMostrarVistaPago"
+                    @click="seccionActual = 'pago'"
+                  >
+                    Siguiente
+                  </button>
+                </div>
+              </template>
+
+              <template v-if="seccionActual === 'pago'">
+                <div class="d-flex justify-content-between">
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    @click="seccionActual = 'direcciones'"
+                  >
+                    Regresar
+                  </button>
+                </div>
+              </template>
+            </section>
           </template>
         </div>
 
@@ -1067,6 +1127,7 @@ export default {
 
       if (this.tipoPagoSeleccionado === culqi) {
         this.createCulqiToken().then((token) => {
+          console.log(token);
           this.enviarMutation(token);
         });
       } else {
@@ -1169,6 +1230,8 @@ export default {
         };
       }
 
+      let voucher = this.voucher;
+
       this.$apollo
         .mutate({
           mutation: CreatePedido,
@@ -1203,6 +1266,34 @@ export default {
 
       this.dataEfectivoSeleccionado = null;
       this.dataBancoSeleccionado = null;
+    },
+    asignarEspacioParaNumeroTarjeta(e) {
+      // Desactivar espacio
+      if (e.code === "Space") {
+        e.preventDefault();
+      }
+
+      if (e.key != "Delete" || e.key === "Backspace") {
+        let l = Array.from(this.culqi.nroTarjeta);
+        l = l.length;
+
+        if (
+          l === 4 ||
+          l === 9 ||
+          l === 14 ||
+          l === 19 ||
+          l === 24 ||
+          l === 29 ||
+          l === 34 ||
+          l === 39
+        ) {
+          let arrayText = Array.from(this.culqi.nroTarjeta);
+
+          arrayText[l + 1] = " ";
+
+          this.culqi.nroTarjeta = arrayText.join("");
+        }
+      }
     },
   },
   computed: {
@@ -1325,6 +1416,23 @@ export default {
         c.first_name &&
         c.last_name
       ) {
+        status = true;
+      }
+
+      return status;
+    },
+    validarMostrarVistaPago: function () {
+      let status = false;
+
+      if (this.tipoEnvioSeleccionado.id === 1 && this.validarEnvioLima) {
+        status = true;
+      } else if (
+        this.tipoEnvioSeleccionado.id === 2 &&
+        this.validarEnvioProvincia
+      ) {
+        status = true;
+      }
+      if (this.tipoEnvioSeleccionado.id === 3 && this.validarEnvioGratuito) {
         status = true;
       }
 

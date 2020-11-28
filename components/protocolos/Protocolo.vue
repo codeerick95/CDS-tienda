@@ -6,14 +6,14 @@
     </nuxt-link>
 
     <section class="d-flex justify-content-between align-items-center" v-if="$route.name != 'protocolos-slug'">
-        <p class="mt-0">
+        <p class="mt-0 small">
             Por
             <span class="text-danger">Admin</span>
         </p>
 
-        <p class="mt-0 text-muted">
+        <p class="mt-0 small text-muted">
             <i class="far fa-calendar-alt"></i>
-            {{ $moment(info.created_at).format('YYYY-MM-DD') }}
+            {{ $moment(info.created_at).format('DD-MM-YYYY') }}
         </p>
     </section>
 

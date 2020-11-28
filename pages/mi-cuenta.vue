@@ -12,9 +12,9 @@
         </banner>
 
         <section class="mt-3 w-100">
-          <div class="card">
+          <div class="card border-0">
             <div class="card-body">
-              <h3 class="lead font-weight-bold">Mis pedidos</h3>
+              <h3 class="lead mb-3">Mis pedidos</h3>
 
               <div class="table-responsive" v-if="orders.length >= 1">
                 <table class="table table-striped mb-0 text-center w-100">
@@ -33,7 +33,7 @@
                     <th scope="row">{{ order.id }}</th>
 
                     <td>
-                      <span class="font-weight-bold">{{ setState(order.EstadoPedido) }}</span>
+                      <span class="small font-weight-bold">{{ setState(order.EstadoPedido) }}</span>
                     </td>
 
                     <td>
@@ -45,7 +45,7 @@
                     </td>
 
                     <td>
-                      <span>S/{{ parseFloat(order.precioTotal) }}</span>
+                      <span>S/{{ formatoAPrecio(order.precioTotal) }}</span>
                     </td>
 
                     <td>
@@ -79,6 +79,9 @@
   // Components
   import Banner from '@/components/global/Banner'
 
+  // Mixin
+  import { precio } from '@/mixins/precio'
+
 export default {
   middleware: 'validateUser2',
   data() {
@@ -92,6 +95,7 @@ export default {
   mounted() {
     this.getOrders()
   },
+  mixins: [precio],
   components: {
     Banner
   },
@@ -113,15 +117,23 @@ export default {
       })
     },
     setState(value) {
-      let status
+      let status;
 
-      if(value == 1) {
-        status = 'En espera'
-      } else if(value == 2) {
-        status = 'Validado'
+      if (value == 1) {
+        status = "PEDIDO REALIZADO";
+      } else if (value == 2) {
+        status = "PAGO APROBADO";
+      } else if (value == 3) {
+        status = "PEDIDO ANULADO";
+      } else if (value == 4) {
+        status = "PEDIDO EN TRANSITO";
+      } else if (value == 5) {
+        status = "PEDIDO ENTREGADO";
+      } else {
+        status = "No especificado";
       }
 
-      return status
+      return status;
     },
     setTipoEnvio(value) {
       let status
