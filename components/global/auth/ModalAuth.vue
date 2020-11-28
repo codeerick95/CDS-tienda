@@ -156,7 +156,7 @@
           </div>
         </div>
 
-        <div class="col-8">
+        <div class="col-md-8">
           <div class="alert alert-danger small text-center" v-if="error">
             {{ error.message }}
           </div>
@@ -164,7 +164,7 @@
 
         <div class="col-lg-12 animated fadeIn" v-if="currentSlide">
           <div class="card bg-light border-0">
-            <div class="card-body px-0">
+            <div class="card-body">
               <transition-group enter-active-class="animated fadeIn">
                 <login
                   key="1"
@@ -514,9 +514,11 @@ export default {
   }
 
   &__form {
-    width: 60%;
-
     margin: 0 auto;
+
+    @media (min-width: 768px) {
+      width: 60%;
+    }
   }
 
   &__form-register {

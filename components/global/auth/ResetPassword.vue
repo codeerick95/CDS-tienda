@@ -15,7 +15,9 @@
     </div>
 
     <div class="alert alert-success" v-if="success">
+      <p class="small my-0">
         Se envió un mensaje al correo indicado para restablecer su contraseña.
+      </p>
     </div>
 
     <div class="form-group">
@@ -50,12 +52,12 @@ export default {
           {
             value: "INICIE_FACEBOOK",
             message:
-              "Su correo está registrado, intenta iniciar sesión con Facebook.",
+              "Tu correo está registrado, intenta iniciar sesión con Facebook.",
           },
           {
             value: "INICIE_GOOGLE",
             message:
-              "Su correo está registrado, intenta iniciar sesión con Google.",
+              "Tu correo está registrado, intenta iniciar sesión con Google.",
           }
       ],
       success: false
@@ -67,6 +69,8 @@ export default {
       if (this.validate) {
         this.loading = true;
         this.success = false
+
+        this.$emit('errorPassword', null)
         
           const input = {
             email: this.email
@@ -89,8 +93,13 @@ export default {
                   .then(() => {
                     this.$emit('errorPassword', this.error)
                   })
-              } else {
-                  this.success = true
+
+              }
+
+              if(response.data.RecuperarContraUsuario) {
+                this.success = true
+
+                this.email = ''
               }
 
               this.loading = false

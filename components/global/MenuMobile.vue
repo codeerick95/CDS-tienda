@@ -33,6 +33,9 @@ import {appConfig} from "@/env";
 
 import { mapState } from 'vuex'
 
+// Mixins
+import { logout } from '@/mixins/logout'
+
 export default {
   data() {
     return {
@@ -69,10 +72,11 @@ export default {
       loading: false
     }
   },
+  mixins: [logout],
   methods: {
     to(item) {
       if(item.tag == 'carrito') {
-        this.$store.commit('setModalCarrito', true)
+        this.$router.push('/carrito')
       }
 
       if(item.tag == 'index' || item.tag === 'tienda') {
@@ -95,24 +99,6 @@ export default {
 
       // Asignar item activo
       this.activeItem = item.tag
-    },
-    logout() {
-          this.loading = true
-
-        this.$apolloHelpers.onLogout()
-          .then(() => {
-            setTimeout(() => {
-              this.$cookies.remove(appConfig.userData)
-
-              this.$store.commit('setUsuarioLogueado', false)
-
-              this.loading = false
-
-              this.$router.push('/')
-
-              this.$bvModal.show('modal-auth')
-            }, 1500)
-        })
     }
   },
   computed: {

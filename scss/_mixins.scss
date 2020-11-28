@@ -5,11 +5,15 @@
 }
 
 @mixin subtitle {
-  font-size: 1.3em;
+  font-size: 1em;
   font-weight: 700;
 
   padding-bottom: .3rem;
 
   display: inline-block;
   border-bottom: 2px solid rgba($success, .8);
+
+  @media (min-width: 768px) {
+    font-size: 1.1em;
+  }
 }

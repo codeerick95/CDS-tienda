@@ -44,12 +44,12 @@
                                     </div>
 
                                     <div class="pt-3 d-flex flex-column flex-md-row justify-content-between align-items-center">
-                                        <p class="my-0">
+                                        <p class="my-0 small">
                                             Por
-                                            <span class="text-danger">{{ `${item.User.name} ${item.User.fatherSurname}` }}</span>
+                                            <span class="text-danger">{{ `${item.User.name} ${item.User.surnames}` }}</span>
                                         </p>
 
-                                        <p class="my-0 text-muted">
+                                        <p class="my-0 small text-muted">
                                             <i class="far fa-calendar-alt"></i>
                                             {{ $moment(item.created_at).format('DD-MM-YYYY') }}
                                         </p>
@@ -61,15 +61,15 @@
                     </template>
 
                     <div class="col-md-12" v-else>
-                        <p class="lead">Sé el primero en comentar.</p>
+                        <p class="medium-text">Sé el primero en comentar.</p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <form @submit.prevent="createComment()">
                             <div class="form-group">
-                                <label for="comment">Comentario</label>
-                                <textarea id="comment" class="form-control" required v-model="message"></textarea>
+                                <!-- <label for="comment">Escribe tu comentario</label> -->
+                                <textarea id="comment" placeholder="Escribe tu comentario" class="form-control" required v-model="message"></textarea>
                             </div>
                             <div class="form-group text-right mt-3">
                                 <input type="submit" class="btn btn-sm btn-primary" :disabled="loading || !message" :value="loading ? 'Publicando' : 'Publicar'">

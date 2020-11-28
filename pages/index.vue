@@ -12,7 +12,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-5">
         <div class="col-md-12" v-if="loading">
           <loading></loading>
         </div>
@@ -22,7 +22,7 @@
             <p class="lead">Próximamente...</p>
           </div>
 
-          <div class="col-md-6" v-for="item in protocolos" :key="item.id" v-else>
+          <div class="col-md-6 mb-4 mb-md-3" v-for="item in protocolos" :key="item.id" v-else>
               <protocolo :info="item"></protocolo>
           </div>
         </template>

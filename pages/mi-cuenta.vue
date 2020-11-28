@@ -81,6 +81,7 @@
 
   // Mixin
   import { precio } from '@/mixins/precio'
+  import { logout } from '@/mixins/logout'
 
 export default {
   middleware: 'validateUser2',
@@ -95,7 +96,7 @@ export default {
   mounted() {
     this.getOrders()
   },
-  mixins: [precio],
+  mixins: [precio, logout],
   components: {
     Banner
   },
@@ -147,24 +148,6 @@ export default {
       }
 
       return status
-    },
-    logout() {
-          this.loading = true
-
-        this.$apolloHelpers.onLogout()
-          .then(() => {
-            setTimeout(() => {
-              this.$cookies.remove(appConfig.userData)
-
-              this.$store.commit('setUsuarioLogueado', false)
-
-              this.loading = false
-
-              this.$router.push('/')
-
-              this.$bvModal.show('modal-auth')
-            }, 1500)
-        })
     }
   },
   computed: {

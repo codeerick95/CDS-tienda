@@ -57,6 +57,9 @@
 <script>
   import { appConfig } from '@/env'
 
+  // Mixins
+  import { logout } from '@/mixins/logout'
+
   export default {
     data() {
       return {
@@ -212,6 +215,7 @@
         loading: false
       }
     },
+    mixins: [logout],
     methods: {
       clicked(item, index) {
         this.items.forEach(i => {
@@ -228,24 +232,6 @@
         if(item.route) {
           this.$router.push(item.route)
         }
-      },
-      logout() {
-          this.loading = true
-
-          this.$apolloHelpers.onLogout()
-            .then(() => {
-              setTimeout(() => {
-                this.$cookies.remove(appConfig.userData)
-
-                this.$store.commit('setUsuarioLogueado', false)
-
-                this.loading = false
-
-                this.$router.push('/')
-
-                this.$bvModal.show('modal-auth')
-              }, 1500)
-          })
       }
     }
   }

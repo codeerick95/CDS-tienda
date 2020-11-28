@@ -21,47 +21,63 @@
                 <template v-if="orders.length >= 1">
                   <table class="table mb-0 text-center">
                     <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Estado</th>
-                      <th>Fecha de pedido</th>
-                      <th>Tipo de envío</th>
-                      <th>Monto total</th>
-                      <th>Acciones</th>
-                    </tr>
+                      <tr>
+                        <th>#</th>
+                        <th>Estado</th>
+                        <th>Fecha de pedido</th>
+                        <th>Tipo de envío</th>
+                        <th>Monto total</th>
+                        <th>Acciones</th>
+                      </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="order in orders" :key="order.id">
-                      <th scope="row">{{ order.id }}</th>
+                      <tr v-for="order in orders" :key="order.id">
+                        <th scope="row">{{ order.id }}</th>
 
-                      <td>
-                        <p class="d-flex flex-column">
-                          <span class="small font-weight-bold">{{ setState(order.EstadoPedido) }}</span>
-                          <a href="" @click.prevent="cambiarEstado(order)">Cambiar</a>
-                        </p>
-                      </td>
+                        <td>
+                          <p class="d-flex flex-column">
+                            <span class="small font-weight-bold">{{
+                              setState(order.EstadoPedido)
+                            }}</span>
+                            <a href="" @click.prevent="cambiarEstado(order)"
+                              >Cambiar</a
+                            >
+                          </p>
+                        </td>
 
-                      <td>
-                        <span>{{ $moment(order.fechaPedido).format('DD-MM-YYYY') }}</span>
-                      </td>
+                        <td>
+                          <span>{{
+                            $moment(order.fechaPedido).format("DD-MM-YYYY")
+                          }}</span>
+                        </td>
 
-                      <td>
-                        <span>{{ setTipoEnvio(order.TipoEnvio) }}</span>
-                      </td>
+                        <td>
+                          <span>{{ setTipoEnvio(order.TipoEnvio) }}</span>
+                        </td>
 
-                      <td>
-                        <span>S/{{ parsearPrecio(order.precioTotal) }}</span>
-                      </td>
+                        <td>
+                          <span>S/{{ parsearPrecio(order.precioTotal) }}</span>
+                        </td>
 
-                      <td>
-                        <nuxt-link :to="{name: 'pedidos-id', params: {id: order.id}}" class="btn btn-sm btn-info">Detalles</nuxt-link>
-                      </td>
-                    </tr>
+                        <td>
+                          <nuxt-link
+                            :to="{
+                              name: 'pedidos-id',
+                              params: { id: order.id },
+                            }"
+                            class="btn btn-sm btn-info"
+                            >Detalles</nuxt-link
+                          >
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
 
                   <!-- Paginación -->
-                  <div class="d-flex justify-content-center" v-if="this.nroTotalItems >= 9">
+                  <div
+                    class="d-flex justify-content-center"
+                    v-if="this.nroTotalItems >= 9"
+                  >
                     <b-pagination
                       v-model="page"
                       :total-rows="nroTotalItems"
@@ -74,7 +90,9 @@
                 <section class="mt-3" v-else>
                   <div class="d-flex align-items-center">
                     <p class="my-0">Aún no tiene pedidos registrados.</p>
-                    <nuxt-link to="/" class="btn btn-sm btn-primary ml-3">Visitar tienda</nuxt-link>
+                    <nuxt-link to="/" class="btn btn-sm btn-primary ml-3"
+                      >Visitar tienda</nuxt-link
+                    >
                   </div>
                 </section>
               </div>
@@ -95,13 +113,29 @@
           <div class="form-group">
             <label for="estado">Seleccione un estado</label>
             <select id="estado" class="form-control" v-model="estado">
-              <option :value="item.value" v-for="(item, index) in estados" :key="index">{{ item.text }}</option>
+              <option
+                :value="item.value"
+                v-for="(item, index) in estados"
+                :key="index"
+              >
+                {{ item.text }}
+              </option>
             </select>
           </div>
 
           <div class="form-group">
-            <a href="" class="text-danger mr-3" @click.prevent="cancelarActualizacion()">Cancelar</a>
-            <input type="submit" class="btn btn-primary" :disabled="loading" :value="loading ? 'Actualizando...' : 'Actualizar'">
+            <a
+              href=""
+              class="text-danger mr-3"
+              @click.prevent="cancelarActualizacion()"
+              >Cancelar</a
+            >
+            <input
+              type="submit"
+              class="btn btn-primary"
+              :disabled="loading"
+              :value="loading ? 'Actualizando...' : 'Actualizar'"
+            />
           </div>
         </form>
       </div>
@@ -110,181 +144,187 @@
 </template>
 
 <script>
-  // Queries
-  import GetAllPedidos from '@/apollo/queries/pedidos/GetAllPedidos'
+// Queries
+import GetAllPedidos from "@/apollo/queries/pedidos/GetAllPedidos";
 
-  // Mutations
-  import UpdateEstado from '@/apollo/mutations/pedidos/UpdateEstado'
+// Mutations
+import UpdateEstado from "@/apollo/mutations/pedidos/UpdateEstado";
 
-  export default {
-    middleware: 'authDashboard',
-    layout: 'admin',
-    data() {
-      return {
-        orders: [],
-        number_paginate: 10,
-        page: 1,
-        nroTotalItems: 0,
-        objectSelected: {},
-        loading: false,
-        estados: [
-          {
-            value: '1',
-            text: 'En espera'
-          },
-          {
-            value: '2',
-            text: 'Validado'
-          },
-          {
-            value: '3',
-            text: 'entregado'
-          },
-          {
-            value: '4',
-            text: 'Anulado'
-          },
-        ],
-        estado: ''
-      }
-    },
-    mounted() {
-      this.getOrders()
-    },
-    methods: {
-      getOrders() {
-        this.loading = true
+export default {
+  middleware: "authDashboard",
+  layout: "admin",
+  data() {
+    return {
+      orders: [],
+      number_paginate: 10,
+      page: 1,
+      nroTotalItems: 0,
+      objectSelected: {},
+      loading: false,
+      estados: [
+        {
+          value: "1",
+          text: "PEDIDO REALIZADO",
+        },
+        {
+          value: "2",
+          text: "PAGO APROBADO",
+        },
+        {
+          value: "3",
+          text: "PEDIDO ANULADO",
+        },
+        {
+          value: "4",
+          text: "PEDIDO EN TRANSITO",
+        },
+        {
+          value: "5",
+          text: "PEDIDO ENTREGADO",
+        }
+      ],
+      estado: "",
+    };
+  },
+  mounted() {
+    this.getOrders();
+  },
+  methods: {
+    getOrders() {
+      this.loading = true;
 
-        let number_paginate = this.number_paginate,
-          page = this.page
+      let number_paginate = this.number_paginate,
+        page = this.page;
 
-        this.$apollo.query({
+      this.$apollo
+        .query({
           query: GetAllPedidos,
-          fetchPolicy: 'no-cache',
+          fetchPolicy: "no-cache",
           variables: {
             number_paginate,
-            page
-          }
+            page,
+          },
         })
-          .then(res => {
-            this.orders = res.data.GetPedidos.data
-            this.nroTotalItems = res.data.GetPedidos.NroItems
+        .then((res) => {
+          this.orders = res.data.GetPedidos.data;
+          this.nroTotalItems = res.data.GetPedidos.NroItems;
 
-            this.loading = false
-          })
-          .catch(() => this.loading = false)
-      },
-      paginate(event) {
-        this.currentPage = event
+          this.loading = false;
+        })
+        .catch(() => (this.loading = false));
+    },
+    paginate(event) {
+      this.currentPage = event;
 
-        this.getOrders()
+      this.getOrders();
 
-        window.scrollTo(0, 0)
-      },
-      showModalDelete(product) {
-        this.objectSelected = product
+      window.scrollTo(0, 0);
+    },
+    showModalDelete(product) {
+      this.objectSelected = product;
 
-        this.$bvModal.show('modal-product-delete')
-      },
-      setState(value) {
-        let status
+      this.$bvModal.show("modal-product-delete");
+    },
+    setState(value) {
+      let status;
 
-        if(value == 1) {
-          status = 'En espera'
-        } else if(value == 2) {
-          status = 'Validado'
-        } else if(value == 3) {
-          status = 'Entregado'
-        } else if(value == 4) {
-          status = 'Anulado'
-        }
+      if (value == 1) {
+        status = "PEDIDO REALIZADO";
+      } else if (value == 2) {
+        status = "PAGO APROBADO";
+      } else if (value == 3) {
+        status = "PEDIDO ANULADO";
+      } else if (value == 4) {
+        status = "PEDIDO EN TRANSITO";
+      } else if (value == 5) {
+        status = "PEDIDO ENTREGADO";
+      } else {
+        status = "No especificado";
+      }
 
-        return status
-      },
-      setTipoEnvio(value) {
-        let status
+      return status;
+    },
+    setTipoEnvio(value) {
+      let status;
 
-        if(value == 1) {
-          status = 'Envío Express'
-        } else if(value == 2) {
-          status = 'Encomienda (Provincias)'
-        } else {
-          status = 'Envío gratuito'
-        }
+      if (value == 1) {
+        status = "Envío Express";
+      } else if (value == 2) {
+        status = "Encomienda (Provincias)";
+      } else {
+        status = "Envío gratuito";
+      }
 
-        return status
-      },
-      cambiarEstado(order) {
-        // Asigna datos de la orden
-        this.objectSelected = order
+      return status;
+    },
+    cambiarEstado(order) {
+      // Asigna datos de la orden
+      this.objectSelected = order;
 
-        this.estado = order.EstadoPedido
+      this.estado = order.EstadoPedido;
 
-        this.$bvModal.show('modal-estado')
-      },
-      cancelarActualizacion() {
-        this.objectSelected = {}
+      this.$bvModal.show("modal-estado");
+    },
+    cancelarActualizacion() {
+      this.objectSelected = {};
 
-        this.estado = ''
+      this.estado = "";
 
-        this.$bvModal.hide('modal-estado')
-      },
-      updateEstado() {
+      this.$bvModal.hide("modal-estado");
+    },
+    updateEstado() {
+      this.loading = true;
 
-        this.loading = true
+      let input1 = {
+        id: parseInt(this.objectSelected.id),
+        EstadoPedido: parseInt(this.estado),
+      };
 
-        let input1 = {
-          "id": parseInt(this.objectSelected.id),
-          "EstadoPedido": parseInt(this.estado)
-        }
-
-        this.$apollo.mutate({
+      this.$apollo
+        .mutate({
           mutation: UpdateEstado,
           variables: {
-            input1
-          }
+            input1,
+          },
         })
         .then(() => {
-          let message = `Se editó el estado del pedido ${this.objectSelected.id}`
+          let message = `Se editó el estado del pedido ${this.objectSelected.id}`;
 
           this.$toast.success(message, {
-            duration : 5000
-          })
+            duration: 5000,
+          });
 
-          this.cancelarActualizacion()
+          this.cancelarActualizacion();
 
           // Se actualizan los pedidos
-          this.getOrders()
+          this.getOrders();
 
-          this.loading = false
-        })
-      },
-      parsearPrecio(n) {
-       if(n) {
-          // Esta función agrega comas y puntos al total
-          n = n.toString()
-          while (true) {
-          var n2 = n.replace(/(\d)(\d{3})($|,|\.)/g, '$1,$2$3')
-          if (n == n2) break
-          n = n2
-          }
+          this.loading = false;
+        });
+    },
+    parsearPrecio(n) {
+      if (n) {
+        // Esta función agrega comas y puntos al total
+        n = n.toString();
+        while (true) {
+          var n2 = n.replace(/(\d)(\d{3})($|,|\.)/g, "$1,$2$3");
+          if (n == n2) break;
+          n = n2;
+        }
 
-          return parseFloat(n).toFixed(2)
-       }
+        return parseFloat(n).toFixed(2);
+      }
     },
-    },
-    computed: {
-    }
-  }
+  },
+  computed: {},
+};
 </script>
 
 <style lang="scss">
-  .admin-products {
-
-    &__image {
-      width: 50px;
-      height: 50px;
-    }
-
+.admin-products {
+  &__image {
+    width: 50px;
+    height: 50px;
   }
+}
 </style>

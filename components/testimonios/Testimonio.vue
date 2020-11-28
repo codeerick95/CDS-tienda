@@ -27,7 +27,7 @@ export default {
 		setName: function() {
 			let fullName = '',
 				name = this.info.User.name,
-				lastname = this.info.User.fatherSurname
+				lastname = this.info.User.surnames
 
 			if(name && lastname) {
 				fullName = `${name} ${lastname}`

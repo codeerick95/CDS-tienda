@@ -1,7 +1,7 @@
 <template>
 <div class="container documentos">
     <div class="row">
-        <div class="col-md-12 bg-dark">
+        <div class="col-md-12">
             <banner title="Documentos científicos">
                 <template slot="icon">
                     <span class="banner__icon">

@@ -11,8 +11,7 @@ query GetAllComentsProtocolo($id_protocolo:Int){
       typeDocument
       numberDocument
       name
-      fatherSurname
-      motherSurname
+      surnames
       photo
       url
       email

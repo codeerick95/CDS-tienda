@@ -225,52 +225,55 @@
                             <span>{{ info2.data3.email }}</span>
                           </p>
 
-                          <section v-if="info2.data2.voucher">
-                            <p
-                              class="d-flex flex-column flex-md-row align-items-center border-bottom"
-                            >
-                              <span class="text-muted mr-2">Voucher:</span>
-
-                              <a
-                                href=""
-                                class="btn btn-sm btn-primary ml-3 mb-1"
-                                @click.prevent="mostrarDropzone = true"
-                                v-if="
-                                  !info2.data2.voucher
-                                "
-                                >Subir comprobante de pago</a
+                          <div v-if="info2.data2 && (info2.data2.TipoPago == 1 || info2.data2.TipoPago == 2)">
+                            <section>
+                              <p
+                                class="d-flex flex-column flex-md-row align-items-center border-bottom py-2"
                               >
-                            </p>
+                                <span class="text-muted mr-2">Voucher:</span>
 
-                            <img
-                              :src="info2.data2.voucher"
-                              alt=""
-                              width="300px"
-                              class="img-fluid"
-                              v-if="info2.data2.voucher"
-                            />
-                          </section>
+                                <a
+                                  href=""
+                                  class="btn btn-sm btn-primary ml-3 mb-1 py-1"
+                                  @click.prevent="mostrarDropzone = true"
+                                  v-if="
+                                    !info2.data2.voucher &&
+                                    tipoUsuario == 2 &&
+                                    !mostrarDropzone &&
+                                    !voucher
+                                  "
+                                  >Subir comprobante de pago</a
+                                >
+                              </p>
 
-                          <!-- Dropzone -->
-                          <section>
-                            <dropzone
-                              ref="imgDropZone"
-                              id="customdropzone"
-                              :options="dropzoneConfig"
-                              @vdropzone-complete="uploadFiles"
-                              v-show="mostrarDropzone"
-                            ></dropzone>
+                              <img
+                                :src="info2.data2.voucher"
+                                alt=""
+                                width="300px"
+                                class="img-fluid"
+                                v-if="info2.data2.voucher"
+                              />
+                            </section>
 
-                            <section v-if="previewImage">
-                              <div class="preview">
-                                <img
-                                  :src="previewImage"
-                                  alt="Imagen de usuario"
-                                  class="img-fluid"
-                                />
-                              </div>
+                            <!-- Dropzone -->
+                            <section>
+                              <dropzone
+                                ref="imgDropZone"
+                                id="customdropzone"
+                                :options="dropzoneConfig"
+                                @vdropzone-complete="uploadFiles"
+                                v-show="mostrarDropzone"
+                              ></dropzone>
 
-                              <template v-if="!info2.data2.voucher">
+                              <section v-if="previewImage">
+                                <div class="preview">
+                                  <img
+                                    :src="previewImage"
+                                    alt="Imagen de usuario"
+                                    class="img-fluid"
+                                  />
+                                </div>
+
                                 <a
                                   href=""
                                   @click.prevent="removeImage()"
@@ -289,9 +292,9 @@
                                       : "Actualizar"
                                   }}
                                 </button>
-                              </template>
+                              </section>
                             </section>
-                          </section>
+                          </div>
                         </template>
                       </div>
                     </div>
@@ -390,8 +393,8 @@ export default {
           this.setCosto(this.info2.data2.TipoEnvio);
 
           this.cliente = `${this.info2.data3.name} ${
-            this.info2.data3.fatherSurname || ""
-          } ${this.info2.data3.motherSurname || ""}`;
+            this.info2.data3.surnames || ""
+          }`;
         });
     },
     setState(value) {

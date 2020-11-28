@@ -108,6 +108,9 @@ import HeaderApp from "@/components/global/Header";
 import MenuMobile from "@/components/global/MenuMobile";
 import ModalAuth from "@/components/global/auth/ModalAuth";
 
+// Mixins
+import { logout } from '@/mixins/logout'
+
 export default {
   data() {
     return {
@@ -115,6 +118,7 @@ export default {
       loading: false,
     };
   },
+  mixins: [logout],
   components: {
     HeaderApp,
     MenuMobile,
@@ -171,38 +175,8 @@ export default {
         } else {
           this.$router.push("/");
         }
-
-        /* if(!this.userData && this.usuarioLogueado) {
-                this.logout()
-            } else {
-                // Redirigir según el tipo de usuario
-                if(this.userData.typeUser == 1) {
-                    this.$router.push('/admin/productos')
-                } else if(this.userData.typeUser == 2){
-                    this.$router.push('/mi-cuenta')
-                } else {
-                    this.$router.push('/')
-                }
-            }  */
       }
-    },
-    logout() {
-      this.loading = true;
-
-      this.$apolloHelpers.onLogout().then(() => {
-        setTimeout(() => {
-          this.$cookies.remove(appConfig.userData);
-
-          this.$store.commit("setUsuarioLogueado", false);
-
-          this.loading = false;
-
-          this.$router.push("/");
-
-          this.$bvModal.show("modal-auth");
-        }, 1500);
-      });
-    },
+    }
   },
   computed: {
     ...mapState([

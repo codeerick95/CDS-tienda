@@ -11,8 +11,7 @@ mutation createComentarioProtocolos($input:ComentarioInput!){
       typeDocument
       numberDocument
       name
-      fatherSurname
-      motherSurname
+      surnames
       photo
       url
       email
