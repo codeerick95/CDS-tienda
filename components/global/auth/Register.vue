@@ -162,7 +162,7 @@ export default {
           {
             value: "INICIE_CORREO",
             message:
-              "Parece que te has registrado en KiraSportsWear con una dirección de correo y contraseña.",
+              "Parece que te has registrado con una dirección de correo y contraseña.",
           }
       ]
     };
@@ -185,7 +185,7 @@ export default {
           this.fecha_nacimiento ||
           this.$moment(new Date()).formar("YYYY-MM-DD"),
         urlPhoto: "",
-        tipoInicio: 1,
+        tipoInicio: 1
       };
 
       let photo = ""

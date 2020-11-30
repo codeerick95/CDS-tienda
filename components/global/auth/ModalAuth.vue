@@ -89,14 +89,14 @@
             <div class="card-body h-100">
               <div class="d-flex justify-content-center">
                 <img
-                  src="/logo.png"
+                  :src="logo"
                   alt="Logo La Tiendita"
                   class="modal-auth__logo"
                 />
               </div>
 
               <section>
-                <button
+                <!-- <button
                   type="button"
                   class="btn btn-block rounded-0 btn-primary mb-2"
                   @click="loginWithFacebook()"
@@ -117,9 +117,9 @@
                     <i class="fab fa-google"></i>
                   </span>
                   Ingresar con Google
-                </GoogleLogin>
+                </GoogleLogin> -->
 
-                <button
+                <!-- <button
                   type="button"
                   class="btn btn-block rounded-0 btn-success"
                   @click="currentSlide = 1"
@@ -128,17 +128,17 @@
                     <i class="far fa-envelope"></i>
                   </span>
                   Ingresar con correo electrónico
-                </button>
+                </button> -->
               </section>
             </div>
 
-            <div class="card-footer text-center text-dark bg-white">
+            <div class="card-footer text-center text-dark bg-white pb-0">
               <p v-if="!currentSlide || currentSlide == 1">
                 ¿Aún no tienes una cuenta?
                 <a
                   href=""
                   class="font-weight-bold"
-                  @click.prevent="currentSlide = 2"
+                  @click.prevent="cambiarSeccionActual(2)"
                   >Registrarme</a
                 >
               </p>
@@ -148,7 +148,7 @@
                 <a
                   href=""
                   class="font-weight-bold"
-                  @click.prevent="currentSlide = 1"
+                  @click.prevent="cambiarSeccionActual(1)"
                   >Ingresar</a
                 >
               </p>
@@ -164,13 +164,13 @@
 
         <div class="col-lg-12 animated fadeIn" v-if="currentSlide">
           <div class="card bg-light border-0">
-            <div class="card-body">
+            <div class="card-body py-0">
               <transition-group enter-active-class="animated fadeIn">
                 <login
                   key="1"
                   v-if="currentSlide == 1"
                   @errorLogin="error = $event"
-                  @passwordReset="currentSlide = 3"
+                  @passwordReset="cambiarSeccionActual(3)"
                 ></login>
 
                 <register
@@ -179,8 +179,15 @@
                   @errorRegistro="error = $event"
                 ></register>
 
-                <reset-password key="3" @regresar="currentSlide = 1" @errorPassword="error = $event" v-if="currentSlide == 3">
-                </reset-password>
+                <div key="3" v-if="currentSlide == 3">
+                  <div class="row justify-content-center">
+                    <div class="col-md-10">
+                      <reset-password  @regresar="cambiarSeccionActual(1)" @errorPassword="error = $event">
+                      </reset-password>
+                    </div>
+                  </div>
+                </div>
+                
               </transition-group>
             </div>
           </div>
@@ -191,7 +198,7 @@
 </template>
 
 <script>
-import { appConfig } from "../../../env";
+import { appConfig } from "@/env";
 
 // Components
 import Login from "@/components/global/auth/Login";
@@ -208,9 +215,10 @@ import { auth } from "@/mixins/auth.js";
 export default {
   data() {
     return {
+      logo: appConfig.logo,
       name: "",
       text: "",
-      currentSlide: 0,
+      currentSlide: 1,
       logo: appConfig.logo,
       mostrarCamposDocumento: false,
       dataForRegister: {},
@@ -469,6 +477,11 @@ export default {
         this.$bvModal.hide("modal-auth");
       });
     },
+    cambiarSeccionActual(value) {
+      this.error = null
+
+      this.currentSlide = value
+    }
   },
   computed: {
     setTitle: function () {
@@ -510,7 +523,7 @@ export default {
   }
 
   &__logo {
-    max-width: 150px;
+    max-width: 200px;
   }
 
   &__form {

@@ -66,7 +66,7 @@ export default {
           {
             value: "INICIE_CORREO",
             message:
-              "Parece que te has registrado en KiraSportsWear con una dirección de correo y contraseña.",
+              "Parece que te has registrado con una dirección de correo y contraseña.",
           },
           {
             value: "CONTRASEÑA_INCORRECTA",
@@ -75,7 +75,7 @@ export default {
           {
             value: "NO_EXISTE",
             message:
-              "No pudimos encontrar una cuenta con el correo eléctronico que ingresaste. Regístrate con Facebook o Google.",
+              "No pudimos encontrar una cuenta con el correo eléctronico que ingresaste.",
           },
       ]
     };
@@ -86,6 +86,8 @@ export default {
       if (this.validate) {
         this.error = null;
         this.loading = true;
+
+        this.$emit('errorLogin', null)
         
           const input = {
             email: this.email,

@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="submit()" class="modal-auth__form">
-    <p class="text-muted text-center">
-        Ingrese el correo electrónico con el que se registró
+    <p class="text-muted text-center small">
+      Ingrese el correo electrónico con el que se registró
     </p>
 
     <div class="form-group">
@@ -41,7 +41,7 @@ import { appConfig } from "@/env";
 import RecuperarContraUsuario from "@/apollo/mutations/RecuperarContraUsuario";
 
 // Mixins
-import { auth } from '@/mixins/auth.js'
+import { auth } from "@/mixins/auth.js";
 
 export default {
   data() {
@@ -49,18 +49,24 @@ export default {
       loading: false,
       email: "",
       errores: [
-          {
-            value: "INICIE_FACEBOOK",
-            message:
-              "Tu correo está registrado, intenta iniciar sesión con Facebook.",
-          },
-          {
-            value: "INICIE_GOOGLE",
-            message:
-              "Tu correo está registrado, intenta iniciar sesión con Google.",
-          }
+        {
+          value: "INICIE_FACEBOOK",
+          message:
+            "Tu correo está registrado, intenta iniciar sesión con Facebook.",
+        },
+        {
+          value: "INICIE_GOOGLE",
+          message:
+            "Tu correo está registrado, intenta iniciar sesión con Google.",
+        },
+        {
+          value: "NO_EXISTE",
+          message:
+            "No pudimos encontrar una cuenta con el correo eléctronico que ingresaste.",
+        }
       ],
-      success: false
+      success: false,
+      error: null
     };
   },
   mixins: [auth],
@@ -68,44 +74,43 @@ export default {
     submit() {
       if (this.validate) {
         this.loading = true;
-        this.success = false
+        this.success = false;
 
-        this.$emit('errorPassword', null)
-        
-          const input = {
-            email: this.email
-          };
+        this.$emit("errorPassword", null);
 
-          this.$apollo
-            .mutate({
-              mutation: RecuperarContraUsuario,
-              variables: {
-                input,
-              },
-              errorPolicy: 'all'
-            })
-            .then((response) => {
+        const input = {
+          email: this.email,
+        };
 
-              if (response.errors) {
-                let codigoError = response.errors[0].debugMessage;
+        this.$apollo
+          .mutate({
+            mutation: RecuperarContraUsuario,
+            variables: {
+              input,
+            },
+            errorPolicy: "all",
+          })
+          .then((response) => {
+            if (response.errors) {
+              let codigoError = response.errors[0].debugMessage;
 
-                this.setError(codigoError)
-                  .then(() => {
-                    this.$emit('errorPassword', this.error)
-                  })
+              let _this = this
 
-              }
+              this.setError(codigoError).then(() => {
+                this.$emit("errorPassword", _this.error);
+              });
+            }
 
-              if(response.data.RecuperarContraUsuario) {
-                this.success = true
+            if (response.data.RecuperarContraUsuario) {
+              this.success = true;
 
-                this.email = ''
-              }
+              this.email = "";
+            }
 
-              this.loading = false
-            });
+            this.loading = false;
+          });
       }
-    }
+    },
   },
   computed: {
     validate: function () {
