@@ -1,16 +1,12 @@
-mutation CreatePedido($input1:PedidoInput!,$input2:[DetallePedidoInput!],
-  $input3:FacturacionInput!,$input4:DireccionEnvioInput!,$voucher:Upload,$input5:DatosTargetaInput) {
+mutation CreatePedido($input1:PedidoInput!,$input2:[DetallePedidoInput!]
+  $input3:FacturacionInput!,$voucher:Upload,$input4:DireccionEnvioInput!,$input5:DatosTarjetaInput) {
   CreatePedido(input1:$input1,input2:$input2,input3:$input3,input4:$input4,input5:$input5,voucher:$voucher) {
     id
-    fechaPedido
     EstadoPedido
-    TipoPago
-    banco
     nroOperacion
     TipoEnvio
     costoEnvio
     precioTotal
-    voucher
     direccionEnvio
   }
 }

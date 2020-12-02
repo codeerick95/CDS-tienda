@@ -1,41 +1,44 @@
-query GetPedidoUser{
-  GetPedidoUser {
-    id
-    fechaPedido
-    EstadoPedido
-    TipoPago
-    banco
-    nroOperacion
-    TipoEnvio
-    costoEnvio
-    precioTotal
-    voucher
-    direccionEnvio
-    user_id
-    
-    DetallePedido {
+query GetPedidoUser($number_paginate:Int,$page:Int){
+  GetPedidoUser(number_paginate:$number_paginate,page:$page) {
+    NroItems
+    data{
       id
-      imagen
-      nombre
-      cantidad
-      precio
-      total
-      pedido_id
-      producto_id
-      data {
+      fechaPedido
+      EstadoPedido
+      TipoPago
+      banco
+      nroOperacion
+      TipoEnvio
+      costoEnvio
+      precioTotal
+      voucher
+      direccionEnvio
+      user_id
+
+      DetallePedido {
         id
+        imagen
         nombre
-        slug
-        
-        precio_real
-        precio_descuento
-        stok_minimo
-        stok_real
-        
-        keywords
-        favoritos
-        estado
-       
+        cantidad
+        precio
+        total
+        pedido_id
+        producto_id
+        data {
+          id
+          nombre
+          slug
+
+          precio_real
+          precio_descuento
+          stok_minimo
+          stok_real
+
+          keywords
+          favoritos
+          estado
+
+        }
       }
     }
   } 

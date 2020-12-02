@@ -877,22 +877,29 @@ export default {
 
     // Inicializar Culqi
     setTimeout(() => {
-      Culqi.publicKey = appConfig.culqi;
-      Culqi.init();
-    }, 3000);
+      this.initCulqi()
+    }, 3000)
   },
   components: {
     ModalFinalizarPago,
     OrderCreated,
   },
   methods: {
+    nitCulqi() {
+      Culqi.publicKey = appConfig.culqi;
+      Culqi.init();
+    },
     mostrarModalLogin() {
       if (!this.usuarioLogueado) {
         this.$bvModal.show("modal-login");
       }
     },
     createCulqiToken() {
-      return new Promise((resolve) => {
+      // Completar año
+      let fecha = document.getElementById('card[exp_year]')
+          fecha.value = '20' + this.culqi.year
+
+      return new Promise((resolve, reject) => {
         Culqi.createToken();
 
         /* REVISA QUE ESTÁ DISPONIBLE EL TOKEN Y RESUELVE LA PROMESA */
@@ -904,10 +911,13 @@ export default {
           if (c > 20) clearInterval(checkToken);
 
           if (Culqi.token) {
+            this.enviarMutation(Culqi.token.id)
+
             clearInterval(checkToken);
 
             resolve(Culqi.token.id);
           }
+          
         }, 1000);
       });
     },
@@ -1126,10 +1136,11 @@ export default {
       let culqi = 3;
 
       if (this.tipoPagoSeleccionado === culqi) {
-        this.createCulqiToken().then((token) => {
+        this.createCulqiToken()
+        /* this.createCulqiToken().then((token) => {
           console.log(token);
           this.enviarMutation(token);
-        });
+        }); */
       } else {
         this.enviarMutation();
       }
@@ -1223,7 +1234,7 @@ export default {
 
       if (this.tipoPagoSeleccionado === 3) {
         input5 = {
-          emailTargeta: this.culqi.email,
+          emailTarjeta: this.culqi.email,
           first_name: this.culqi.first_name,
           last_name: this.culqi.last_name,
           source_id: token,
@@ -1258,6 +1269,8 @@ export default {
         .catch((error) => {
           this.loading = false;
           this.error = true;
+
+          this.initCulqi()
         });
     },
     modalCerrado() {
